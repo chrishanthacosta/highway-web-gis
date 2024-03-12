@@ -10,12 +10,17 @@ export const GenerateZodFormSchema = (configurationSchema:any):any => {
         switch (prop.dataType) {
             case "INTEGER":
                 const c1 = getNumberType(prop)
-                if(c1) result[key]= c1 
+                if(c1) result[prop.columnName]= c1 
+                
+                break;
+             case "REAL":
+                const c11 = getNumberType(prop)
+                if(c11) result[prop.columnName]= c11 
                 
                 break;
             case "STRING":
                 const c2 = getStringType(prop)
-                if(c2) result[key]= c2 
+                if(c2) result[prop.columnName]= c2 
                 break;
             default:
                 console.log("error in generatezodformschema",prop.dataType)
@@ -23,7 +28,17 @@ export const GenerateZodFormSchema = (configurationSchema:any):any => {
         }
        
     });
-    console.log("result-zod-scema",result,)
+    //add linked schemas -- detail tables
+
+    configurationSchema.linkedSchemas?.forEach((linkedConfigurationSchema : any) => {
+       
+        const formDef = GenerateZodFormSchema(linkedConfigurationSchema)
+         console.log("added l formDef",formDef)
+        result[linkedConfigurationSchema.tableName] = getLinkedSchemaType(formDef)
+        
+    });
+
+    console.log("result-zod-scema formDef",result,)
     return result
 }
 
@@ -59,3 +74,16 @@ const getNumberType = (prop: any): any => {
     }
     
 }
+
+const getLinkedSchemaType = (linkedFormDef: any): any => {
+    return z.array(
+        z.object(linkedFormDef)
+    )
+}
+
+ // spans: z.array(
+//     z.object({
+//       supportceneterspan: z.number(),
+//       clearspan: z.number(),
+//     })
+//   ),

@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm,useFieldArray } from 'react-hook-form'
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -18,7 +18,8 @@ import { Button } from "@/components/ui/button"
 import { GenerateZodFormSchema } from '@/lib/system/generate-zod-form-schema';
 import { BridgeSchema } from '@/schemas/bridge-schema';
 import { GenerateDefaults } from '@/lib/system/generate-zod-defaults';
-import { GenerateShadcnFormField } from '../../../../lib/system/generate-shadcn-form-field';
+import { GenerateShadcnFormField } from '@/lib/system/generate-shadcn-form-field';
+import { GenerateShadcnArrayFormField } from '@/lib/system/generate-shadcn-array-form-field';
 
 const formDef = GenerateZodFormSchema(BridgeSchema);
 const formSchema = z.object(formDef)
@@ -81,7 +82,11 @@ export const BridgeForm = () => {
   const { toast } = useToast()
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: { ...defaultValues ,bridgespans:[{
+      spanno: "1",
+      supportcenterspan: 0,
+      clearspan: 0,
+    }]},
     // defaultValues:
     // {
     //   location: "",
@@ -106,6 +111,8 @@ export const BridgeForm = () => {
     // },
   });
 
+  const { fields,append,remove } = useFieldArray({ name: BridgeSchema.linkedSchemas[0].tableName, control:form.control })
+
   function onSubmit(data: z.infer<typeof formSchema>) {
     console.log("data-data",data,)
     toast({
@@ -127,103 +134,35 @@ export const BridgeForm = () => {
                   Bridge Data
             </FormDescription>
           <div className="flex justify-center flex-wrap gap-2 w-full"> 
-            <div className="flex flex-col gap-2 w-full md:w-1/3 min-w-80"> 
-              {/* <FormField
+            <div className="flex justify-center flex-wrap gap-2 w-full">
+              <div className="flex flex-col gap-2 w-full md:w-1/3 min-w-80"> 
+              
+                {GenerateShadcnFormField({ field: BridgeSchema.fields.location,   control: form.control})}
+                {GenerateShadcnFormField({ field: BridgeSchema.fields.roadName,   control: form.control})}
+            
+                </div>
+              <div className=" flex flex-col gap-2 w-full md:w-1/3 min-w-80">
+                {GenerateShadcnFormField({ field: BridgeSchema.fields.eeDivision, control: form.control })}
+                {GenerateShadcnFormField({ field: BridgeSchema.fields.constructedYear, control: form.control })}
                 
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Location</FormLabel>
-                    <FormControl>
-                      <Input placeholder="location" {...field}   />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
-              {GenerateShadcnFormField({ name: "location",   control: form.control,  schema: BridgeSchema})}
-              {GenerateShadcnFormField({ name: "roadName",   control: form.control,  schema: BridgeSchema})}
-              {GenerateShadcnFormField({ name: "eeDivision",   control: form.control,  schema: BridgeSchema})}
-              {GenerateShadcnFormField({ name: "constructedYear",   control: form.control,  schema: BridgeSchema})}
-             
-              {/* <FormField
-                control={form.control}
-                name="roadName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Road Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="roadName" {...field} />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="eeDivision"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>EE Division</FormLabel>
-                    <FormControl>
-                      <Input placeholder="eeDivision" {...field} />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-           </div>
-           <div  className=" flex flex-col gap-2 w-full md:w-1/3 min-w-80">
-              <FormField
-                control={form.control}
-                name="bridgeName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bridge Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="bridgeName" {...field} />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="riverName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>River Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="riverName" {...field} />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="village"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Village</FormLabel>
-                    <FormControl>
-                      <Input placeholder="village" {...field} />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
+              </div>
             </div>
+            <div>
+              <h1>Spans</h1>
+              <div >
+                {fields.map((field, index) => { return(
+                  <div key={field.id} className="flex items-end">
+                    <Button onClick={() => remove(index)}>-</Button>
+                    {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.spanno, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
+                    {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.supportcenterspan, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
+                    {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.clearspan, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
+                    <Button onClick={()=> append({})}>+</Button>
+                  </div>
+                )})
+                }
+              </div>
+              </div> 
+
           </div>
           <Button type="submit">Submit</Button>
         </form>

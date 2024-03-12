@@ -10,7 +10,8 @@ export default function MainNavbar() {
 
   const menus = [
     { title: "Items", path: "/your-path" },
-    { title: "DB", path: "/db" },
+    { title: "DB", path: "/dev/table" },
+    { title: "Schema Gen", path: "/dev/schema" },
     { title: "Reports", path: "/your-path" },
     { title: "Contact Us", path: "/your-path" },
   ]

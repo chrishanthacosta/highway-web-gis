@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input"
 
-export const GenerateShadcnFormField = ({ field,  control }: { field:any,control:any}):any => {
+export const GenerateShadcnArrayFormField = ({ field, control, name, index }: { field:any,control:any,name:string,index:Number}):any => {
   const label = field.label;
   const placeholder = field.placeholder;
   const inputType = field.inputType;
@@ -20,7 +20,7 @@ export const GenerateShadcnFormField = ({ field,  control }: { field:any,control
     return (
           <FormField
                 control={control}
-                name={field.columnName}
+        name={`${name}.${index}.${field.columnName}` }
                 render={({ field }) => (
                     <FormItem className= "w-full" >
                     <FormLabel>{ label } </FormLabel>
