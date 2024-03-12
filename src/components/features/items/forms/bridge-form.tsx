@@ -1,6 +1,6 @@
 "use client"
-import React from 'react'
-import { useForm,useFieldArray } from 'react-hook-form'
+import React, { useEffect } from 'react'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -78,6 +78,9 @@ const formSchema = z.object(formDef)
 //   }
 // );
 const defaultValues: any = GenerateDefaults(BridgeSchema);
+
+
+
 export const BridgeForm = () => {
   const { toast } = useToast()
   const form = useForm({
@@ -111,6 +114,10 @@ export const BridgeForm = () => {
     // },
   });
 
+  const { watch, setValue } = form;
+
+  const spanCount = watch("spanCount");
+
   const { fields,append,remove } = useFieldArray({ name: BridgeSchema.linkedSchemas[0].tableName, control:form.control })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
@@ -125,6 +132,21 @@ export const BridgeForm = () => {
     })
   }
 
+  useEffect(()=>{
+    if (spanCount) {
+      const emptySpans:any = []
+      for (let index = 0; index < spanCount; index++) {
+        const element = { spanno :index+1}
+        emptySpans.push(element)
+      }
+
+      
+      setValue("bridgespans", emptySpans);
+
+       
+    }
+  },[spanCount])
+  
 
   return (
     <div className='flex items-center justify-center mx-auto w-full '>
@@ -149,18 +171,31 @@ export const BridgeForm = () => {
             </div>
             <div>
               <h1>Spans</h1>
-              <div >
+              {GenerateShadcnFormField({ field: BridgeSchema.fields.spanCount, control: form.control,inputClassName:"max-w-80" })}
+              {/* <div className="min-w-60">
+                <Button type='button' onClick={() => append({})}>+</Button>
+              </div> */}
                 {fields.map((field, index) => { return(
-                  <div key={field.id} className="flex items-end">
-                    <Button onClick={() => remove(index)}>-</Button>
-                    {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.spanno, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
+                  <div key={field.id} className="flex items-end flex-wrap">
+                    {/* <div className="min-w-10">
+                      <Button type='button' onClick={() => remove(index)}>-</Button>
+                    </div> */}
+                    <div className="min-w-60">
+                      {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.spanno, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
+                      </div>
+                    <div className="min-w-60">
                     {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.supportcenterspan, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
-                    {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.clearspan, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
-                    <Button onClick={()=> append({})}>+</Button>
+                    </div>
+                    <div className="min-w-60">
+                      {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.clearspan, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
+                    </div>
+                    {/* <div className="min-w-60">
+                      <Button type='button' onClick={() => append({})}>+</Button>
+                    </div> */}
                   </div>
                 )})
                 }
-              </div>
+             
               </div> 
 
           </div>
