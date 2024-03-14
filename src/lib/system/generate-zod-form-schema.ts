@@ -1,6 +1,6 @@
 
 import { z } from "zod";
-
+// return a schema for zod form - all props having form:true is returned
 export const GenerateZodFormSchema = (configurationSchema:any):any => {
     const keys:string[] = Object.keys(configurationSchema.fields)
     const result:any = {}

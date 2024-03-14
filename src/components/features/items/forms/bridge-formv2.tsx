@@ -16,77 +16,26 @@ import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
 import { Button } from "@/components/ui/button"
 import { GenerateZodFormSchema } from '@/lib/system/generate-zod-form-schema';
-import { BridgeSchema } from '@/schemas/bridge-schema';
+import { BridgeFormUiSchema, BridgeSchema } from '@/schemas/bridge-schema';
 import { GenerateDefaults } from '@/lib/system/generate-zod-defaults';
 import { GenerateShadcnFormField } from '@/lib/system/generate-shadcn-form-field';
 import { GenerateShadcnArrayFormField } from '@/lib/system/generate-shadcn-array-form-field';
-import { GenerateShadcnArrayTableHeader } from './../../../../lib/system/generate-shadcn-array-header';
-import CameraComponent from './../../../camera/camera-component';
+import { GenerateShadcnArrayTableHeader } from '../../../../lib/system/generate-shadcn-array-header';
+import CameraComponent from '../../../camera/camera-component';
 import { saveBridge } from '@/actions/bridges/actions-bridge';
-import { AddSampleData } from './../../../../lib/system/add-sample-data';
-import { DivComponent } from './../../../../lib/system/code-gen-helpers/get-div-component';
+import { AddSampleData } from '../../../../lib/system/add-sample-data';
+import { DivComponent } from '../../../../lib/system/code-gen-helpers/get-div-component';
+import { GenerateUiFromSchema } from '@/lib/system/generate-ui-from-schema';
 
 const formDef = GenerateZodFormSchema(BridgeSchema);
 export const BridgeFormSchema = z.object(formDef)
 
-// const BridgeFormSchema = z.object({
-//   location: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }),
-//   roadName: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }) ,
-//   eeDivision: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }) ,
-//   bridgeName: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }) ,
-//   riverName: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }) ,
-//   village: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }) ,
-//   constructedYear: z.coerce.number().optional() ,
-//   spans: z.array(
-//     z.object({
-//       supportceneterspan: z.number(),
-//       clearspan: z.number(),
-//     })
-//   ),
-//   bridgeWith: z.number(),
-//   overallBridgeWidth: z.number(),
-//   carriagewayWidth: z.number(),
-//   footwalkWidthLeft: z.number(),
-//   footwalkWidthRight: z.number(),
-//   bridgeLength: z.number(),
-//   crossingDetails: z.string(),
-//   riverWidth: z.number(),
-//   riverDepth: z.number(),
-//   paintingAreaSteel: z.number(),
-//   paintingAreaConcrete: z.number(),
-
-// })
-
-//   .refine(
-//   (data) => {
-//     if (!data.location) {
-//       console.log("pio", data.location)
-//       return !!data.location;
-//     }
-//     return true;
-//   },
-//   {
-//     message: "location is required",
-//     path: ["location"],
-//   }
-// );
+ 
 const defaultValues: any = GenerateDefaults(BridgeSchema);
 
 
 
-export const BridgeForm = () => {
+export const BridgeFormv2 = () => {
   const { toast } = useToast()
   const form = useForm({
     resolver: zodResolver(BridgeFormSchema),
@@ -138,14 +87,15 @@ export const BridgeForm = () => {
   
 
   return (
-    <div className='flex items-center justify-center mx-auto w-full border-4 '>
+    <div className='flex items-center justify-center mx-auto w-full border-4 border-indigo-600'>
       <Form {...form} >
         <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'  >
             <FormDescription>
                   Bridge Data
             </FormDescription>
-          <div className="flex justify-center flex-wrap gap-2 w-full"> 
-            <div className="flex justify-center flex-wrap gap-2 w-full">
+          <div className="flex flex-col justify-center flex-wrap gap-2 w-full"> 
+            {GenerateUiFromSchema(BridgeFormUiSchema, BridgeSchema, form.control, fields)}
+            {/* <div className="flex justify-center flex-wrap gap-2 w-full">
               <div className="flex flex-col gap-2 w-full md:w-1/3 min-w-80"> 
               
                 {GenerateShadcnFormField({ field: BridgeSchema.fields.location,   control: form.control})}
@@ -171,17 +121,13 @@ export const BridgeForm = () => {
             <div className="flex flex-col items-center justify-center flex-wrap gap-2 w-full">
               <h1>Spans</h1>
               {GenerateShadcnFormField({ field: BridgeSchema.fields.spanCount, control: form.control,inputClassName:"max-w-80" })}
-              {/* <div className="min-w-60">
-                <Button type='button' onClick={() => append({})}>+</Button>
-              </div> */}
+           
                 <div className="hidden md:flex items-end flex-wrap ">
                 {GenerateShadcnArrayTableHeader(BridgeSchema.linkedSchemas[0])}
                 </div>
                 {fields.map((field, index) => { return(
                   <div key={field.id} className="flex items-end flex-wrap">
-                    {/* <div className="min-w-10">
-                      <Button type='button' onClick={() => remove(index)}>-</Button>
-                    </div> */}
+                 
                     <div className="w-20">
                       {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.spanno, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
                       </div>
@@ -191,14 +137,12 @@ export const BridgeForm = () => {
                     <div className="min-w-60">
                       {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.clearspan, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
                     </div>
-                    {/* <div className="min-w-60">
-                      <Button type='button' onClick={() => append({})}>+</Button>
-                    </div> */}
+                  
                   </div>
                 )})
                 }
              
-              </div> 
+              </div>  */}
 
           </div>
 
@@ -211,7 +155,7 @@ export const BridgeForm = () => {
           }}>Add Sample Data</Button>
         </form>
       </Form>
-      <DivComponent className="bg-red-600"> <p>samples</p> </DivComponent>
+      
     </div>
   )
 }

@@ -22,66 +22,10 @@ import { GenerateShadcnFormField } from '@/lib/system/generate-shadcn-form-field
 import { GenerateShadcnArrayFormField } from '@/lib/system/generate-shadcn-array-form-field';
 import { GenerateShadcnArrayTableHeader } from './../../../../lib/system/generate-shadcn-array-header';
 import CameraComponent from './../../../camera/camera-component';
-import { saveBridge } from '@/actions/bridges/actions-bridge';
-import { AddSampleData } from './../../../../lib/system/add-sample-data';
-import { DivComponent } from './../../../../lib/system/code-gen-helpers/get-div-component';
 
 const formDef = GenerateZodFormSchema(BridgeSchema);
-export const BridgeFormSchema = z.object(formDef)
+const formSchema = z.object(formDef)
 
-// const BridgeFormSchema = z.object({
-//   location: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }),
-//   roadName: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }) ,
-//   eeDivision: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }) ,
-//   bridgeName: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }) ,
-//   riverName: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }) ,
-//   village: z.string().refine((val) => val.length > 0, {
-//     message: "required",
-//   }) ,
-//   constructedYear: z.coerce.number().optional() ,
-//   spans: z.array(
-//     z.object({
-//       supportceneterspan: z.number(),
-//       clearspan: z.number(),
-//     })
-//   ),
-//   bridgeWith: z.number(),
-//   overallBridgeWidth: z.number(),
-//   carriagewayWidth: z.number(),
-//   footwalkWidthLeft: z.number(),
-//   footwalkWidthRight: z.number(),
-//   bridgeLength: z.number(),
-//   crossingDetails: z.string(),
-//   riverWidth: z.number(),
-//   riverDepth: z.number(),
-//   paintingAreaSteel: z.number(),
-//   paintingAreaConcrete: z.number(),
-
-// })
-
-//   .refine(
-//   (data) => {
-//     if (!data.location) {
-//       console.log("pio", data.location)
-//       return !!data.location;
-//     }
-//     return true;
-//   },
-//   {
-//     message: "location is required",
-//     path: ["location"],
-//   }
-// );
 const defaultValues: any = GenerateDefaults(BridgeSchema);
 
 
@@ -89,7 +33,7 @@ const defaultValues: any = GenerateDefaults(BridgeSchema);
 export const BridgeForm = () => {
   const { toast } = useToast()
   const form = useForm({
-    resolver: zodResolver(BridgeFormSchema),
+    resolver: zodResolver(formSchema),
     defaultValues: { ...defaultValues ,bridgespans:[{
       spanno: "1",
       supportcenterspan: 0,
@@ -104,9 +48,8 @@ export const BridgeForm = () => {
 
   const { fields,append,remove } = useFieldArray({ name: BridgeSchema.linkedSchemas[0].tableName, control:form.control })
 
-  function onSubmit(data: z.infer<typeof BridgeFormSchema>) {
-    //console.log("data-data",data,)
-    saveBridge(data)
+  function onSubmit(data: z.infer<typeof formSchema>) {
+   
     toast({
       title: "You submitted the following values:",
       description: (
@@ -116,8 +59,6 @@ export const BridgeForm = () => {
         </pre>
       ),
     })
-
-   
   }
 
   useEffect(()=>{
@@ -135,10 +76,9 @@ export const BridgeForm = () => {
     }
   },[spanCount])
   
-  
 
   return (
-    <div className='flex items-center justify-center mx-auto w-full border-4 '>
+    <div className='flex items-center justify-center mx-auto w-full '>
       <Form {...form} >
         <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'  >
             <FormDescription>
@@ -205,13 +145,63 @@ export const BridgeForm = () => {
           <CameraComponent/>
 
           <Button type="submit">Submit</Button>
-          <Button type="button" onClick={() => { 
-            //setValue("bridgespans.0.clearspan",3)
-            AddSampleData(BridgeSchema, setValue)
-          }}>Add Sample Data</Button>
         </form>
       </Form>
-      <DivComponent className="bg-red-600"> <p>samples</p> </DivComponent>
     </div>
   )
 }
+
+
+// const formSchema = z.object({
+//   location: z.string().refine((val) => val.length > 0, {
+//     message: "required",
+//   }),
+//   roadName: z.string().refine((val) => val.length > 0, {
+//     message: "required",
+//   }) ,
+//   eeDivision: z.string().refine((val) => val.length > 0, {
+//     message: "required",
+//   }) ,
+//   bridgeName: z.string().refine((val) => val.length > 0, {
+//     message: "required",
+//   }) ,
+//   riverName: z.string().refine((val) => val.length > 0, {
+//     message: "required",
+//   }) ,
+//   village: z.string().refine((val) => val.length > 0, {
+//     message: "required",
+//   }) ,
+//   constructedYear: z.coerce.number().optional() ,
+//   spans: z.array(
+//     z.object({
+//       supportceneterspan: z.number(),
+//       clearspan: z.number(),
+//     })
+//   ),
+//   bridgeWith: z.number(),
+//   overallBridgeWidth: z.number(),
+//   carriagewayWidth: z.number(),
+//   footwalkWidthLeft: z.number(),
+//   footwalkWidthRight: z.number(),
+//   bridgeLength: z.number(),
+//   crossingDetails: z.string(),
+//   riverWidth: z.number(),
+//   riverDepth: z.number(),
+//   paintingAreaSteel: z.number(),
+//   paintingAreaConcrete: z.number(),
+
+// })
+
+//   .refine(
+//   (data) => {
+//     if (!data.location) {
+//       console.log("pio", data.location)
+//       return !!data.location;
+//     }
+//     return true;
+//   },
+//   {
+//     message: "location is required",
+//     path: ["location"],
+//   }
+// );

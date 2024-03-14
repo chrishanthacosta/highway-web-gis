@@ -16,7 +16,7 @@ export const GenerateShadcnFormField = ({ field, control, inputClassName="" }: {
   const label = field.label;
   const placeholder = field.placeholder;
   const inputType = field.inputType;
-  console.log("generated ff",label)
+  const disabled = field.disabled ? { disabled:true} : { disabled:false};
     return (
           <FormField
                 control={control}
@@ -25,7 +25,7 @@ export const GenerateShadcnFormField = ({ field, control, inputClassName="" }: {
                     <FormItem className= "w-full" >
                     <FormLabel>{ label } </FormLabel>
                     <FormControl>
-                      <Input placeholder={placeholder} {...field} type={inputType} className={inputClassName}   />
+                      <Input placeholder={placeholder}  {...field} {...disabled}  type={inputType} className={inputClassName}   />
                     </FormControl>
 
                     <FormMessage />

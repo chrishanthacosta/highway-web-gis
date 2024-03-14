@@ -1,12 +1,15 @@
 "use server"
 
 import  Database  from 'better-sqlite3';
-const db = new Database("app.db");
- db.pragma('journal_mode = WAL');
+
 
 import React from 'react'
 import { SiTruenas } from 'react-icons/si';
-export const getBridge  = async (id: Number): Promise<string>  => {
+import { BridgeFormSchema } from '@/components/features/items/forms/bridge-form';
+import { z } from "zod";
+
+
+export const getBridge = async (id: Number): Promise<string> => {
   
   
   return  Promise.resolve( id.toString());
@@ -33,6 +36,15 @@ export const createdb = async (): Promise<boolean> => {
      return  Promise.resolve( false);
   }
  
+}
+
+export const saveBridge = async (data: z.infer<typeof BridgeFormSchema>) => {
+  const db = new Database("app.db");
+  db.pragma('journal_mode = WAL');
+  
+  //const stmt = db.prepare('INSERT INTO cats (name, age) VALUES (?, ?)');
+  console.log("b saved",data)
+  return  Promise.resolve( false);
 }
 
  
