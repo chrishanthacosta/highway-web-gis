@@ -53,6 +53,7 @@ const keys:string[] = Object.keys(configurationSchema.fields)
     db.pragma('journal_mode = WAL');
     console.log("result tb cr-sql",sql,)
      
+    
 
     
     try {

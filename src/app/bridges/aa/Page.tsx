@@ -1,23 +1,18 @@
-"use client"
-
 import Image from "next/image";
 // import MainNavbar from './../components/main-navbar/main-navbar';
 // import { BridgeForm } from '../components/features/items/forms/bridge-form';
 import { Button } from '@/components/ui/button';
-import { createdb } from "../actions/bridges/actions-bridge";
 import { BridgeFormv2 } from "@/components/features/items/forms/bridge-formv2";
 
-export default function Home() {
+export default function Page() {
 
-  const c = async () => {
-    const d = await createdb()
-    console.log("d", d)
-  }
+ 
   return (
     <>
 
       <div className="container mx-auto bg-gray-200 flex justify-center">
-        <h1>App</h1>
+            <p>aaaaaa</p>
+              <BridgeFormv2   />
         {/* <Button onClick={c}  >db create </Button> */}
       </div>
     </>

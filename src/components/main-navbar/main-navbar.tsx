@@ -4,12 +4,17 @@ import { useState } from "react"
 import Link from "next/link"
 // import { Menu } from "lucide-react"
 import { FaBars } from "react-icons/fa";
+import { GetDrpdownMenu } from "@/lib/system/ui-helpers/get-dropdownMenu";
 
 export default function MainNavbar() {
   const [state, setState] = useState(false)
 
   const menus = [
-    { title: "Items", path: "/your-path" },
+    {
+      title: "Items", path: "/your-path", type: "dropdown",
+      children: { title: "Select Item", links: [{title: "Bridges", href:"/bridges"},
+       {title: "Culverts", href:"/culverts/add"}] }
+    },
     { title: "DB", path: "/dev/table" },
     { title: "Schema Gen", path: "/dev/schema" },
     { title: "Reports", path: "/your-path" },
@@ -30,11 +35,20 @@ export default function MainNavbar() {
             }`}
         >
           <ul className="justify-center items-center space-y-8 md:flex md:space-x-6 md:space-y-0">
-            {menus.map((item, idx) => (
-              <li key={idx} className="text-gray-600 hover:text-indigo-600">
-                <Link href={item.path}>{item.title}</Link>
-              </li>
-            ))}
+            {menus.map((item, idx) => {
+              if (item.type === "dropdown") {
+                return (
+                  GetDrpdownMenu(item)
+                )
+
+                }
+              else {
+                return (
+                  <li key={idx} className="text-gray-600 hover:text-indigo-600">
+                    <Link href={item.path}>{item.title}</Link>
+                  </li>
+                )
+              } })}
           </ul>
         </div>
         <div id="loginAndBars" className="flex">

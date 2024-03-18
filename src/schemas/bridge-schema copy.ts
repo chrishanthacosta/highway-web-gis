@@ -3,13 +3,13 @@
 export const BridgeSchema = {
     tableName: "bridges",
     fields: {
-        id: { columnName:"id",dataType: "INTEGER", required: true, db: true, auto: true, pk: true, null: false, unique: true },
+        id: { columnName:"id",dataType: "INTEGER", table:true,required: true, db: true, auto: true, pk: true, null: false, unique: true },
         location: { columnName:"location",dataType: "STRING", inputType: "text", required: true, max: 100, min: 0, db: true, form: true, label: "Location", placeholder: "location", null: false, default: "" },
-        roadName: { columnName:"roadName",dataType: "STRING", inputType: "text", required: true, max: 100, min: 0, db: true, form: true, label: "Road Name", placeholder: "Road Name", default: "kurunegala" },
-        eeDivision: { columnName:"eeDivision",dataType: "STRING", inputType: "text", required: true, max: 100, min: 0, db: true, form: true, label: "EE Division", placeholder: "EE Division" },
+        roadName: { columnName:"roadName",dataType: "STRING",table:true, inputType: "text", required: true, max: 100, min: 0, db: true, form: true, label: "Road Name", placeholder: "Road Name", default: "kurunegala" },
+        eeDivision: { columnName:"eeDivision",dataType: "STRING",table:true, inputType: "text", required: true, max: 100, min: 0, db: true, form: true, label: "EE Division", placeholder: "EE Division" },
         constructedYear: { columnName:"constructedYear",dataType: "INTEGER", inputType: "number", required: true, max: 100, min: 0, db: true, form: true, label: "Constructed Year", placeholder: "constructed year" },
-        spanCount: { columnName:"spanCount",dataType: "INTEGER", inputType: "number", required: true, max: 100, min: 0, db: true, form: true, label: "Span Count", placeholder: "span count...",default: 1 },
-        bridgeWidth: { columnName:"bridgeWidth",dataType: "REAL", inputType: "number", required: true,   db: true, form: true, label: "Bridge Width", placeholder: "bridge width...",  },
+        spanCount: { columnName:"spanCount",dataType: "INTEGER", table:true,inputType: "number", required: true, max: 100, min: 0, db: true, form: true, label: "Span Count", placeholder: "span count...",default: 1 },
+        bridgeWidth: { columnName:"bridgeWidth",dataType: "REAL",table:true, inputType: "number", required: true,   db: true, form: true, label: "Bridge Width", placeholder: "bridge width...",  },
         bridgeOverallWidth: { columnName:"bridgeOverallWidth",dataType: "REAL", inputType: "number", required: true,   db: true, form: true, label: "Bridge Overall Width", placeholder: "overall bridge width...",  },
         carriagewayWidth: { columnName:"carriagewayWidth",dataType: "REAL", inputType: "number", required: true,   db: true, form: true, label: "Carriageway Width", placeholder: "carriageway width...",  },
         footWalkLhsWidth: { columnName:"footWalkLhsWidth",dataType: "REAL", inputType: "number",     db: true, form: true, label: "footWalk Lhs Width", placeholder: "footWalk Lhs Width...",  },

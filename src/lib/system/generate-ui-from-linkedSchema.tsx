@@ -22,7 +22,7 @@ export const GenerateUiFromLinkedSchema = (fields: any, configurationSchema: any
                             
                             if (detailField.form) {
                                 return (
-                                    <div key="index2" className={detailField.divClassName} >
+                                    <div key={index2} className={detailField.divClassName} >
                                    { GenerateShadcnArrayFormField({
                                         field: detailField,
                                         control: control,

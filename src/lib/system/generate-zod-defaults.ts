@@ -11,7 +11,7 @@ export const GenerateDefaults = (configurationSchema: any): any => {
         
        
     });
-    console.log("result-defaults",result)
+   // console.log("result-defaults",result)
     return result
 
 }

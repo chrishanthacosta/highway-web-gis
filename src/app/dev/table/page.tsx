@@ -29,17 +29,35 @@ const Page = () => {
     // Add your component logic here
     const createTable = async () => {
         try {
-            const schemaRef = SchemaIndex.find(s => s.schemaName === selectedSchema);
-            console.log("schemaRef", selectedSchema);
+            const schemaRef:any = SchemaIndex.find(s => s.schemaName === selectedSchema);
+             
             if (schemaRef?.ref) {
                 const d = await createTableSqlite(schemaRef?.ref);
             } else {
-                alert("no ref found for schema");
+                alert("no ref found for schema main");
             }
-             alert("success creating table:" );
+             alert("success creating main table:" );
+
+        //create linked schemas
+
+            schemaRef.ref.linkedSchemas.map( async (schema:any) => {
+              const d = await createTableSqlite(schema);
+                alert("success creating linked table:");
+        })
+
+
+             
         } catch (error) {
-            console.error("Error creating table:", error);
+            console.error("Error creating main table:", error);
         }
+
+      
+
+
+
+
+
+
     }
     return (
         <div className='flex flex-col items-center justify-center w-full'>

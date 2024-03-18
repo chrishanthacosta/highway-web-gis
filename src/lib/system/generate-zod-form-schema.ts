@@ -33,18 +33,18 @@ export const GenerateZodFormSchema = (configurationSchema:any):any => {
     configurationSchema.linkedSchemas?.forEach((linkedConfigurationSchema : any) => {
        
         const formDef = GenerateZodFormSchema(linkedConfigurationSchema)
-         console.log("added l formDef",formDef)
+         //console.log("added l formDef",formDef)
         result[linkedConfigurationSchema.tableName] = getLinkedSchemaType(formDef)
         
     });
 
-    console.log("result-zod-scema formDef",result,)
+   // console.log("result-zod-scema formDef",result,)
     return result
 }
 
 const getStringType = (prop: any): any => {
     if (!prop.form) return;
-    console.log("added strinbg",prop.label)
+    // console.log("added strinbg",prop.label)
     let validatorFn = (val:any): boolean => {return true };
     let validatorMessage:{message:string} = {message:""}
     if (prop.required) {
@@ -59,12 +59,12 @@ const getStringType = (prop: any): any => {
 
 const getNumberType = (prop: any): any => {
     if (!prop.form) return;
-    console.log("added number",prop.label)
+    // console.log("added number",prop.label)
     let validatorFn = (val:any): boolean => {return true };
     let validatorMessage:{message:string} = {message:""}
     if (prop.required) {
         validatorFn = (val: any) => {
-            console.log("val",val)
+            // console.log("val",val)
             return !isNaN(val)
         };
         validatorMessage ={ message: "required", }

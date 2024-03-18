@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
-import { z } from "zod";
+import { boolean, z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
@@ -22,10 +22,13 @@ import { GenerateShadcnFormField } from '@/lib/system/generate-shadcn-form-field
 import { GenerateShadcnArrayFormField } from '@/lib/system/generate-shadcn-array-form-field';
 import { GenerateShadcnArrayTableHeader } from '../../../../lib/system/generate-shadcn-array-header';
 import CameraComponent from '../../../camera/camera-component';
-import { saveBridge } from '@/actions/bridges/actions-bridge';
+import { insertBridge,   updateBridge  } from '@/actions/bridges/actions-bridge';
 import { AddSampleData } from '../../../../lib/system/add-sample-data';
 import { DivComponent } from '../../../../lib/system/code-gen-helpers/get-div-component';
 import { GenerateUiFromSchema } from '@/lib/system/generate-ui-from-schema';
+import { GetInsertSqliteStatement } from '@/lib/system/sqlite-helpers/get-insert-sqlite-stmt';
+import { cn } from '@/lib/utils';
+import { GetUpdateQuery } from '@/lib/system/sqlite-helpers/get-update-sqlite-stmt';
 
 const formDef = GenerateZodFormSchema(BridgeSchema);
 export const BridgeFormSchema = z.object(formDef)
@@ -33,9 +36,25 @@ export const BridgeFormSchema = z.object(formDef)
  
 const defaultValues: any = GenerateDefaults(BridgeSchema);
 
+export const LoadingSpinner = ({ className }:{className?:string}) => { return(
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={cn("animate-spin", className)}
+  >
+    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+  </svg>)
+}
 
 
-export const BridgeFormv2 = () => {
+export const BridgeFormv2 = ({id1,data1}:{id1?:number,data1?:any}) => {
   const { toast } = useToast()
   const form = useForm({
     resolver: zodResolver(BridgeFormSchema),
@@ -47,15 +66,80 @@ export const BridgeFormv2 = () => {
      
   });
 
-  const { watch, setValue } = form;
+  const { watch, setValue, formState: { isDirty, dirtyFields,isLoading }, } = form;
+  let spanCount: number;
+  spanCount = watch("spanCount");
+  useEffect(() => {
+    console.log("ppo11",id1,data1)
+    if (data1) {
+      form.reset(data1)
+     }
+  }, [data1])
 
-  const spanCount = watch("spanCount");
+  useEffect(() => {
+      console.log("id1-usee",id1)
+   
+  }, [id1])
+
+ 
+
+ 
 
   const { fields,append,remove } = useFieldArray({ name: BridgeSchema.linkedSchemas[0].tableName, control:form.control })
 
-  function onSubmit(data: z.infer<typeof BridgeFormSchema>) {
-    //console.log("data-data",data,)
-    saveBridge(data)
+  async function onSubmit(data: z.infer<typeof BridgeFormSchema>) {
+    console.log("  query -    obj-rty",)
+      const dirtyValues = Object.fromEntries(
+                Object.entries(data).filter(([key]) => dirtyFields[key])
+    );
+    
+    const uq = GetUpdateQuery(BridgeSchema, id1, dirtyValues)
+    console.log("uq-rty", uq, id1, dirtyValues)
+    if (id1) { //update query - new obj
+      console.log("update query -  old obj-rty",)
+      
+      //span table insert
+      
+      if (dirtyFields.hasOwnProperty("bridgespans")){
+        const insertSQls = GetInsertSqliteStatement(BridgeSchema, data)
+        if (uq) {
+          console.log("update query -  old obj-rty1",)
+        updateBridge(id1, uq, data.bridgespans, insertSQls)
+        }
+        else {
+          console.log("update query -  old obj-rty2",)
+           updateBridge(id1, undefined, data.bridgespans, insertSQls)
+        }
+      } else {
+         console.log("update query -  old obj-rty3.0",)
+        if (uq) {
+          console.log("update query -  old obj-rty3.1",)
+         updateBridge(id1, uq, undefined, undefined)
+        }  
+      }
+     
+        
+                
+    }else{ //insert query - new obj
+      console.log("insert query - new obj-rty",)
+      const insertSQls = GetInsertSqliteStatement(BridgeSchema, data)
+      const objId = await insertBridge(insertSQls);
+    }
+
+    toast({
+      title: "You submitted the following values:",
+      description:  "Added",
+    })
+   
+    
+    return
+
+   
+
+     
+   
+    //
+    //await saveBridge(q,data)
     toast({
       title: "You submitted the following values:",
       description: (
@@ -73,13 +157,11 @@ export const BridgeFormv2 = () => {
     if (spanCount) {
       const emptySpans:any = []
       for (let index = 0; index < spanCount; index++) {
-        const element = { spanno :index+1}
+        const element = { spanno: index + 1, supportcenterspan: 0, clearspan :0}
         emptySpans.push(element)
       }
-
-      
       setValue("bridgespans", emptySpans);
-
+     
        
     }
   },[spanCount])
@@ -148,14 +230,14 @@ export const BridgeFormv2 = () => {
 
           <CameraComponent/>
 
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={!isDirty}>Submit</Button>
           <Button type="button" onClick={() => { 
             //setValue("bridgespans.0.clearspan",3)
             AddSampleData(BridgeSchema, setValue)
           }}>Add Sample Data</Button>
         </form>
       </Form>
-      
+      {!isLoading || <LoadingSpinner />}
     </div>
   )
 }
