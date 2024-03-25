@@ -16,19 +16,19 @@ import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
 import { Button } from "@/components/ui/button"
 import { GenerateZodFormSchema } from '@/lib/system/generate-zod-form-schema';
-import { TableGenSchema } from '@/schemas/tablegen-schema';
+import { TableGenSchema } from '@/components/features/tablegen/tablegen-schema';
 import { GenerateDefaults } from '@/lib/system/generate-zod-defaults';
 import { GenerateShadcnFormField } from '@/lib/system/generate-shadcn-form-field';
 
 const formDef = GenerateZodFormSchema(TableGenSchema);
 const formSchema = z.object(formDef)
 const defaultValues: any = GenerateDefaults(TableGenSchema);
-export default function Page()  {
+export default function Page() {
     const { toast } = useToast()
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues,
-       
+
     });
 
     function onSubmit(data: z.infer<typeof formSchema>) {
@@ -71,7 +71,7 @@ export default function Page()  {
                             {GenerateShadcnFormField({ field: TableGenSchema.fields.tablename, control: form.control })}
 
                         </div>
-                      
+
                     </div>
                     <Button type="submit">Submit</Button>
                 </form>

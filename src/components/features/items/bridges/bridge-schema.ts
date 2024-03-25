@@ -21,6 +21,7 @@ export const BridgeSchema = {
         riverDepth: { columnName: "riverDepth", dataType: "REAL", inputType: "number", db: true, form: true, label: "River Depth", placeholder: "river depth...", sampleData: 6 },
         paintingAreaSteel: { columnName:"paintingAreaSteel",dataType: "REAL", inputType: "number",     db: true, form: true, label: "painting Area Steel", placeholder: "painting Area Steel...", sampleData: 6 },
         paintingAreaConcrete: { columnName:"paintingAreaConcrete",dataType: "REAL", inputType: "number",     db: true, form: true, label: "painting Area Concrete", placeholder: "painting Area Concrete...", sampleData: 3 },
+        
     },  
     linkedSchemas:[{
         tableName: "bridgespans",
@@ -37,12 +38,12 @@ export const BridgeSchema = {
 }
 
  const panel1Coloumn1 = {
-     rows: [{name:"roadName",className:"w-full"},{name:"location",className:"w-full"}],
+     rows: [{ name: "roadName", className: "w-full" }, { name: "location", className: "w-full" }, { name: "bridgeWidth", className: "w-full" }, { name: "carriagewayWidth", className: "w-full " }, { name: "crossingDetails", className: "w-full " }, { name: "riverDepth", className: "w-full " }, { name:"paintingAreaConcrete",className:"w-full "},],
      className:"w-full md:w-1/3   md:min-w-80 "
 }
 
  const panel1Coloumn2 = {
-     rows: [{name:"constructedYear",className:"w-full"},{name:"eeDivision",className:"w-full"}],
+     rows: [{ name: "constructedYear", className: "w-full" }, { name: "eeDivision", className: "w-full" }, { name: "bridgeOverallWidth", className: "w-full" }, { name: "footWalkLhsWidth", className: "w-full " }, { name: "footWalkRhsWidth", className: "w-full " }, { name: "riverWidth", className: "w-full " }, { name:"paintingAreaSteel",className:"w-full "},],
      className:"w-full md:w-1/3   md:min-w-80"
 }
 

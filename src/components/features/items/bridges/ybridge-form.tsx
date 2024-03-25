@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
 import { Button } from "@/components/ui/button"
 import { GenerateZodFormSchema } from '@/lib/system/generate-zod-form-schema';
-import { BridgeSchema } from '@/schemas/bridge-schema';
+import { BridgeSchema } from '@/components/features/items/bridges/bridge-schema';
 import { GenerateDefaults } from '@/lib/system/generate-zod-defaults';
 
 // const formDef = GenerateZodFormSchema(BridgeSchema);
@@ -28,20 +28,20 @@ const formSchema = z.object({
   }),
   roadName: z.string().refine((val) => val.length > 0, {
     message: "required",
-  }) ,
+  }),
   eeDivision: z.string().refine((val) => val.length > 0, {
     message: "required",
-  }) ,
+  }),
   bridgeName: z.string().refine((val) => val.length > 0, {
     message: "required",
-  }) ,
+  }),
   riverName: z.string().refine((val) => val.length > 0, {
     message: "required",
-  }) ,
+  }),
   village: z.string().refine((val) => val.length > 0, {
     message: "required",
-  }) ,
-  constructedYear: z.coerce.number().optional() ,
+  }),
+  constructedYear: z.coerce.number().optional(),
   spans: z.array(
     z.object({
       supportceneterspan: z.number(),
@@ -80,7 +80,7 @@ export const BridgeForm = () => {
   const { toast } = useToast()
   const form = useForm({
     resolver: zodResolver(formSchema),
-   
+
     defaultValues:
     {
       location: "",
@@ -106,7 +106,7 @@ export const BridgeForm = () => {
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    
+
     toast({
       title: "You submitted the following values:",
       description: (
@@ -122,27 +122,27 @@ export const BridgeForm = () => {
     <div className='flex items-center justify-center mx-auto w-full '>
       <Form {...form} >
         <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'  >
-            <FormDescription>
-                  Bridge Data
-            </FormDescription>
-          <div className="flex justify-center flex-wrap gap-2 w-full"> 
-            <div className="flex flex-col gap-2 w-full md:w-1/3 min-w-80"> 
+          <FormDescription>
+            Bridge Data
+          </FormDescription>
+          <div className="flex justify-center flex-wrap gap-2 w-full">
+            <div className="flex flex-col gap-2 w-full md:w-1/3 min-w-80">
               <FormField
-                
+
                 control={form.control}
                 name="location"
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel>Location</FormLabel>
                     <FormControl>
-                      <Input placeholder="location" {...field}   />
+                      <Input placeholder="location" {...field} />
                     </FormControl>
 
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="roadName"
@@ -157,7 +157,7 @@ export const BridgeForm = () => {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="eeDivision"
@@ -172,8 +172,8 @@ export const BridgeForm = () => {
                   </FormItem>
                 )}
               />
-           </div>
-           <div  className=" flex flex-col gap-2 w-full md:w-1/3 min-w-80">
+            </div>
+            <div className=" flex flex-col gap-2 w-full md:w-1/3 min-w-80">
               <FormField
                 control={form.control}
                 name="bridgeName"
@@ -188,7 +188,7 @@ export const BridgeForm = () => {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="riverName"
@@ -203,7 +203,7 @@ export const BridgeForm = () => {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="village"

@@ -4,8 +4,7 @@ import Image from "next/image";
 // import MainNavbar from './../components/main-navbar/main-navbar';
 // import { BridgeForm } from '../components/features/items/forms/bridge-form';
 import { Button } from '@/components/ui/button';
-import { createdb } from "../actions/bridges/actions-bridge";
-import { BridgeFormv2 } from "@/components/features/items/forms/bridge-formv2";
+import { createdb } from "../components/features/items/bridges/actions-bridge";
 
 export default function Home() {
 

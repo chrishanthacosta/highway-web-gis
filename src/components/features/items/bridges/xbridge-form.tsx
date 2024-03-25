@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
 import { Button } from "@/components/ui/button"
 import { GenerateZodFormSchema } from '@/lib/system/generate-zod-form-schema';
-import { BridgeSchema } from '@/schemas/bridge-schema';
+import { BridgeSchema } from '@/components/features/items/bridges/bridge-schema';
 import { GenerateDefaults } from '@/lib/system/generate-zod-defaults';
 import { GenerateShadcnFormField } from '../../../../lib/system/generate-shadcn-form-field';
 
