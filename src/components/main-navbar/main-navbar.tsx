@@ -5,14 +5,17 @@ import Link from "next/link"
 // import { Menu } from "lucide-react"
 import { FaBars } from "react-icons/fa";
 import { GetDrpdownMenu } from "@/lib/system/ui-helpers/get-dropdownMenu";
+import Dropdown from "@/lib/ui-components/dropdown-menu";
 
 export default function MainNavbar() {
   const [state, setState] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState(null);
+
 
   const menus = [
     {
       title: "Items", path: "/your-path", type: "dropdown",
-      children: { title: "Select Item", links: [{title: "Bridges", href:"/bridges"},
+      menuData: { title: "Select Item", menuItems: [{title: "Bridges", href:"/bridges"},
        {title: "Culverts", href:"/culverts/add"}] }
     },
     { title: "DB", path: "/dev/table" },
@@ -20,6 +23,11 @@ export default function MainNavbar() {
     { title: "Reports", path: "/your-path" },
     { title: "Contact Us", path: "/your-path" },
   ]
+
+  const handleItemClick = (index:number) => {
+    console.log("sel index", index)
+    setSelectedIndex(index);
+  };
 
   return (
     <nav className="bg-white w-full border-b md:border-0">
@@ -36,15 +44,16 @@ export default function MainNavbar() {
         >
           <ul className="justify-center items-center space-y-8 md:flex md:space-x-6 md:space-y-0">
             {menus.map((item, idx) => {
-              if (item.type === "dropdown") {
+              if (item.type === "dropdown") { 
                 return (
-                  GetDrpdownMenu(item)
+                  // GetDrpdownMenu(item)
+                  <Dropdown key={idx} label={item.title} menuData={item.menuData} handleItemClick={handleItemClick} index={idx} selectedIndex={selectedIndex}></Dropdown>
                 )
 
                 }
               else {
                 return (
-                  <li key={idx} className="text-gray-600 hover:text-indigo-600">
+                  <li key={idx} className={`text-gray-600 hover:text-indigo-600 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 ${selectedIndex === idx ? " border-b-4 border-red-800" : ""}`} onClick={() => { handleItemClick(idx) }}>
                     <Link href={item.path}>{item.title}</Link>
                   </li>
                 )

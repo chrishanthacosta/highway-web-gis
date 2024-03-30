@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect,useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { boolean, z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,7 +30,11 @@ import { GetInsertSqliteStatement } from '@/lib/system/sqlite-helpers/get-insert
 import { cn } from '@/lib/utils';
 import { GetUpdateQuery } from '@/lib/system/sqlite-helpers/get-update-sqlite-stmt';
 import PhotoComponent from './../../../../lib/photos/photo-component';
-import GeoLocationComponent from '@/lib/geo-location/get-geo-location';
+
+import GeoPositionPicker from '@/lib/geo-location/geo-position.jsx';
+import Popup from '@/lib/popups/popup-type1';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation'
 
 const formDef = GenerateZodFormSchema(BridgeSchema);
 export const BridgeFormSchema = z.object(formDef)
@@ -58,8 +62,10 @@ export const LoadingSpinner = ({ className }: { className?: string }) => {
 
 
 export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
-  const [showPhotos,setshowPhotos] = useState<boolean>(false)
-  const [locationCoords, setlocationCoords] = useState<{}>({})
+  const router = useRouter()
+  const [showPhotos, setshowPhotos] = useState<boolean>(false)
+  const [showGeoLocation, setshowGeoLocation] = useState<boolean>(false)
+  // const [locationCoords, setlocationCoords] = useState<{}>({})
   const { toast } = useToast()
   const form = useForm({
     resolver: zodResolver(BridgeFormSchema),
@@ -73,9 +79,11 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
 
   });
 
-  const { watch, setValue, formState: { isDirty, dirtyFields, isLoading }, } = form;
+  const { watch, setValue, getValues, formState: { isDirty, dirtyFields, isLoading }, } = form;
   let spanCount: number;
   spanCount = watch("spanCount");
+  let lat = watch("latitude")
+  let lon = watch("longitude")
   useEffect(() => {
     console.log("ppo11", id1, data1)
     if (data1) {
@@ -124,19 +132,28 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
           updateBridge(id1, uq, undefined, undefined)
         }
       }
-
-
+      toast({
+        title: "Updated done:",
+        description: "id-" + id1,
+      })
 
     } else { //insert query - new obj
       console.log("insert query - new obj-rty",)
       const insertSQls = GetInsertSqliteStatement(BridgeSchema, data)
       const objId = await insertBridge(insertSQls);
+      id1 = objId.lastInsertRowid;
+      toast({
+        title: "Saving done:",
+        description: "id-" + id1,
+      })
+      router.push("/bridges/list/"+ id1)
     }
 
-    toast({
-      title: "You submitted the following values:",
-      description: "Added",
-    })
+
+    // toast({
+    //   title: "Saving:",
+    //   description: "Added",
+    // })
 
 
     return
@@ -173,24 +190,71 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
     }
   }, [spanCount])
 
-  const locationHandler = (loc)=>{
-    setlocationCoords(loc)
-    alert("rec loc")
-  }
+  // const locationHandler = (loc) => {
+  //   setlocationCoords(loc)
+  //   alert("rec loc")
+  // }
+
+  // const setLat = useCallback((lat: number) => {
+  //   setValue("latitude", lat, { shouldDirty: true })
+  // }, [])
+  // const setLon = useCallback((lon: number) => {
+  //   setValue("longitude", lon, { shouldDirty: true })
+  // }, [])
+
+  const GeolocationButton = useCallback(() => {
+    console.log("getValues(latitude)", getValues("latitude"),)
+
+    let c:number[]
+
+    const setc = (c1: number[]) => {
+      c=c1
+    }
+
+    const passCoords = ( ) => {
+      setValue("latitude", c[1], { shouldDirty: true })
+      setValue("longitude", c[0], { shouldDirty: true })
+    }
+
+
+
+    return (
+      <Popup trigger="Set on Map" onClose={() => passCoords()} >
+
+        <GeoPositionPicker setc={setc}   lat={lat} lon={lon}></GeoPositionPicker>
+      </Popup>
+    )
+  }, [lat, lon])
 
   return (
-    <div className='flex flex-col items-center justify-center mx-auto w-full border-4 border-indigo-600'>
-      <div> <GeoLocationComponent locationHandler = {locationHandler}/></div>
+    <div className='flex flex-col items-center justify-center mx-auto w-full  '>
+      {/* <div className='mr-auto w-full'>
+        <div className='flex justify-center '>
+          
+          <Popup trigger="Set on Map" onClose={() => console.log('Popup closed')} >
+
+            <GeoPositionPicker ></GeoPositionPicker>
+          </Popup>
+        </div>
+      </div> */}
+     
+
+      <div className="flex gap-2 w-full justify-end">
+        <Button onClick={form.handleSubmit(onSubmit)} disabled={!isDirty}>save Data</Button>
+        <Button ><Link href="/bridges/add">Add New Bridge</Link></Button>
+      </div>
+
+
       <Form {...form} >
         <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'  >
           <FormDescription>
-            Bridge Data
+           
           </FormDescription>
           <div className="flex flex-col justify-center flex-wrap gap-2 w-full">
-            {GenerateUiFromSchema(BridgeFormUiSchema, BridgeSchema, form.control, fields)}
+            {GenerateUiFromSchema(BridgeFormUiSchema, BridgeSchema, form.control, fields, { setlocation: GeolocationButton })}
             {/* <div className="flex justify-center flex-wrap gap-2 w-full">
               <div className="flex flex-col gap-2 w-full md:w-1/3 min-w-80"> 
-              
+                
                 {GenerateShadcnFormField({ field: BridgeSchema.fields.location,   control: form.control})}
                 {GenerateShadcnFormField({ field: BridgeSchema.fields.roadName,   control: form.control})}
                 {GenerateShadcnFormField({ field: BridgeSchema.fields.bridgeWidth,   control: form.control})}
@@ -239,7 +303,7 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
 
           </div>
 
-         
+
 
           <Button type="submit" disabled={!isDirty} className="mt-4">Submit</Button>
           <Button type="button" onClick={() => {
@@ -252,7 +316,8 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
         {showPhotos ? "Hide Photos" : "Show Photos"}
       </Button>
       {showPhotos && <PhotoComponent></PhotoComponent>}
-     
+      {showGeoLocation && <PhotoComponent></PhotoComponent>}
+
       {!isLoading || <LoadingSpinner />}
     </div>
   )
