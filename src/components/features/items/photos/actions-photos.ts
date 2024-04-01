@@ -106,3 +106,17 @@ export const updatePhoto = async (photoid: Number,  title:string) => {
   db.close()
   return Promise.resolve({success:true,msg:"updated "   });
 }
+
+export const deletePhoto = async (photoid: number) => {
+  
+ const db = new Database("app-photos.db");
+  db.pragma('journal_mode = WAL');
+  
+   
+    const stmt = db.prepare("delete from photos   where id =?");
+    const info = stmt.run( photoid);
+
+  db.close()
+  return Promise.resolve({success:true,msg:"deleted "   });
+}
+ 

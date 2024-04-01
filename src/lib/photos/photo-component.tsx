@@ -22,8 +22,9 @@ export interface Photo {
 import { useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { insertPhoto, updatePhoto } from '@/components/features/items/photos/actions-photos';
+import { deletePhoto, insertPhoto, updatePhoto } from '@/components/features/items/photos/actions-photos';
 import { useToast } from '@/components/ui/use-toast';
+import { convertUnixToUtc } from '../system/date-time/convert-unix-utc';
 
 
 const PhotoComponent = ({ bridgeid, photos, setPhotos }: { bridgeid?: number, photos: Photo[], setPhotos: (p: any)=>{}}) => {
@@ -48,7 +49,9 @@ const PhotoComponent = ({ bridgeid, photos, setPhotos }: { bridgeid?: number, ph
         console.log("xx-newPhoto", newPhoto)
     };
 
-    const handleDeletePhoto = (photoId: number) => {
+    const handleDeletePhoto = async (photoId: number) => {
+        const res = await deletePhoto(photoId)
+
         setPhotos(photos.filter(photo => photo.id !== photoId));
     };
 
@@ -70,7 +73,13 @@ const PhotoComponent = ({ bridgeid, photos, setPhotos }: { bridgeid?: number, ph
                 setPhotos([...photos]);
             }else{
                 const res = updatePhoto(p.id, p.title)
+
                 if ((await res).success) {
+                    p.unsaved = false
+                    // console.log("saved", p.id,photos)
+
+                    setPhotos([...photos]);
+                    
                     toast({
                         title: "Updated photo:",
                         description: "id-" + p.id,
@@ -116,7 +125,7 @@ const PhotoComponent = ({ bridgeid, photos, setPhotos }: { bridgeid?: number, ph
 
     return (
         <div>
-            <span>{photos.map(p=>p.id)}</span>
+        
             <input
                 type="file"
                 accept="image/*"
@@ -130,19 +139,20 @@ const PhotoComponent = ({ bridgeid, photos, setPhotos }: { bridgeid?: number, ph
                         <div className="flex justify-center w-full">
                             <img src={photo.src} alt={photo.title} />
                         </div>
-                        <div className="flex justify-between my-2">
+                        <div className="flex justify-between my-2 gap-2">
                             <div className="flex items-center gap-2">
-                                <Label>{photo.id}</Label>
-                                <Label>Title</Label>
+                             
+                                <Label>Title:</Label>
                                 <Input
                                     type="text"
                                     placeholder='title...'
                                     value={photo.title}
                                     onChange={e => handleCaptionChange(photo.id, e.target.value)}
-                                    className='border-2 border-red-100 w-[40rem]'
+                                    className='border-2 border-red-100 w-[30rem]'
                                 />
-                                <Label>Date/Time</Label>
-                                <Label>2024-12-23</Label>
+                                <Label>Date/Time:</Label>
+                                {/* <Label>{ photo.date}</Label> */}
+                                <Label>{convertUnixToUtc( Number(photo.date))}</Label>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Button onClick={() => handleDeletePhoto(photo.id)}>Delete</Button>
