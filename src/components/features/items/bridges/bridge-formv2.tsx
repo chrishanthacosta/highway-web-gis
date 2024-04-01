@@ -29,12 +29,13 @@ import { GenerateUiFromSchema } from '@/lib/system/generate-ui-from-schema';
 import { GetInsertSqliteStatement } from '@/lib/system/sqlite-helpers/get-insert-sqlite-stmt';
 import { cn } from '@/lib/utils';
 import { GetUpdateQuery } from '@/lib/system/sqlite-helpers/get-update-sqlite-stmt';
-import PhotoComponent from './../../../../lib/photos/photo-component';
+import PhotoComponent, { Photo } from './../../../../lib/photos/photo-component';
 
 import GeoPositionPicker from '@/lib/geo-location/geo-position.jsx';
 import Popup from '@/lib/popups/popup-type1';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'
+import { GetPhoto, GetPhotoDetails } from '../photos/actions-photos';
 
 const formDef = GenerateZodFormSchema(BridgeSchema);
 export const BridgeFormSchema = z.object(formDef)
@@ -64,7 +65,9 @@ export const LoadingSpinner = ({ className }: { className?: string }) => {
 export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
   const router = useRouter()
   const [showPhotos, setshowPhotos] = useState<boolean>(false)
-  const [showGeoLocation, setshowGeoLocation] = useState<boolean>(false)
+  const [photos,setPhotos] = useState<any>([])
+  const [photo,setPhoto] = useState<any>(null)
+  //const [showGeoLocation, setshowGeoLocation] = useState<boolean>(false)
   // const [locationCoords, setlocationCoords] = useState<{}>({})
   const { toast } = useToast()
   const form = useForm({
@@ -216,6 +219,8 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
       setValue("longitude", c[0], { shouldDirty: true })
     }
 
+  
+
 
 
     return (
@@ -225,6 +230,42 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
       </Popup>
     )
   }, [lat, lon])
+
+  const loadPhotos = useCallback( async () => {
+
+    if (id1 == 0 || id1 == null) {
+      toast({
+        title: "Save before loading images",
+        description: ""
+
+      })
+      return
+    }
+    //check if already loaded
+
+    if (photos.length > 0) {
+      return
+    }
+
+    const photoDetails = await GetPhotoDetails(id1)
+    console.log("qwerty", photoDetails)
+    for (const pd of photoDetails.data) {
+      const p = await GetPhoto(pd.id)
+      console.log("qwerty",p)
+      // setPhotos([...photos, p.data])
+
+      setPhoto(p.data)
+    }
+
+
+    //
+  }, [id1])
+
+  useEffect(() => {
+    if (photo) {
+      setPhotos([...photos, photo])
+    }
+  },[photo])
 
   return (
     <div className='flex flex-col items-center justify-center mx-auto w-full  '>
@@ -242,6 +283,11 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
       <div className="flex gap-2 w-full justify-end">
         <Button onClick={form.handleSubmit(onSubmit)} disabled={!isDirty}>save Data</Button>
         <Button ><Link href="/bridges/add">Add New Bridge</Link></Button>
+        <Button type="button" onClick={() => {
+          //setValue("bridgespans.0.clearspan",3)
+          AddSampleData(BridgeSchema, setValue)
+        }}>Add Sample Data</Button>
+        <span>{photos.length}</span>
       </div>
 
 
@@ -304,19 +350,28 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
           </div>
 
 
+          <div className="flex items-center min-w-3/4 border-2 border-gray-200 rounded-sm pl-[15vw] my-2">
+            <Button type="submit" disabled={!isDirty} className="m-4">Submit</Button>
+          </div>
 
-          <Button type="submit" disabled={!isDirty} className="mt-4">Submit</Button>
-          <Button type="button" onClick={() => {
+          {/* <Button type="button" onClick={() => {
             //setValue("bridgespans.0.clearspan",3)
             AddSampleData(BridgeSchema, setValue)
-          }}>Add Sample Data</Button>
+          }}>Add Sample Data</Button> */}
         </form>
       </Form>
-      <Button type="button" onClick={() => setshowPhotos(!showPhotos)}>
-        {showPhotos ? "Hide Photos" : "Show Photos"}
-      </Button>
-      {showPhotos && <PhotoComponent></PhotoComponent>}
-      {showGeoLocation && <PhotoComponent></PhotoComponent>}
+      <div className="flex items-center w-full border-2 border-gray-200 rounded-sm pl-[15vw] my-2">
+        <Button type="button" onClick={async() => {
+          await loadPhotos()
+          setshowPhotos(!showPhotos)
+        }} className="m-4" >
+        {showPhotos ? "Hide Photos" : (id1 ? "Show Photos" : "Save to Add Photos" )}
+        </Button>
+      </div>
+      <div className="flex items-center w-full border-2 border-gray-200 rounded-sm pl-[15vw] mt-2 mb-[5rem]">
+        {showPhotos && <PhotoComponent bridgeid={id1} photos={photos } setPhotos={setPhotos as any} ></PhotoComponent>}
+      </div>
+      {/* {showGeoLocation && <PhotoComponent></PhotoComponent>} */}
 
       {!isLoading || <LoadingSpinner />}
     </div>

@@ -27,7 +27,7 @@ export const GenerateUiFromSchema = (uiSchema:any,configurationSchema:any,contro
                             {componentLoaders[row.name]( )}
                         </DivComponent>)
                     } else if (configurationSchema.fields[row.name].inputType == "label") {
-                        console.log("aaaaaaaaaaa",)
+                         
                         rowDivs.push(<DivComponent key={rowid} className={rowClassName} >
                             {GenerateShadcnFormLabelField({ field: configurationSchema.fields[row.name], control: control })}
                         </DivComponent>)
