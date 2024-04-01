@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { GenerateZodFormSchema } from '@/lib/system/generate-zod-form-schema';
 import { TableGenSchema } from '@/components/features/tablegen/tablegen-schema';
 import { GenerateDefaults } from '@/lib/system/generate-zod-defaults';
-import { GenerateShadcnFormField } from '@/lib/system/generate-shadcn-form-field';
+import { GenerateShadcnFormInputField } from '@/lib/system/generate-shadcn-form-input-field';
 
 const formDef = GenerateZodFormSchema(TableGenSchema);
 const formSchema = z.object(formDef)
@@ -68,7 +68,7 @@ export default function Page() {
                   </FormItem>
                 )}
               /> */}
-                            {GenerateShadcnFormField({ field: TableGenSchema.fields.tablename, control: form.control })}
+                            {GenerateShadcnFormInputField({ field: TableGenSchema.fields.tablename, control: form.control })}
 
                         </div>
 

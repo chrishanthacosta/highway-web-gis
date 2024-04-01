@@ -27,7 +27,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { convertUnixToUtc } from '../system/date-time/convert-unix-utc';
 
 
-const PhotoComponent = ({ bridgeid, photos, setPhotos }: { bridgeid?: number, photos: Photo[], setPhotos: (p: any)=>{}}) => {
+const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos: Photo[], setPhotos: (p: any)=>{}}) => {
     // const [photos, setPhotos] = useState<Photo[]>([]);
    // const [expandedPhotoId, setExpandedPhotoId] = useState<number | null>(null);
     const [showCamera, setShowCamera] = useState<boolean>(false);
@@ -61,7 +61,7 @@ const PhotoComponent = ({ bridgeid, photos, setPhotos }: { bridgeid?: number, ph
         if (p) {
             if (p.id < 0) {
                 console.log("xx-saveing-id", photoId)
-                const res = await insertPhoto(p.src, p.title, p.date, bridgeid,)
+                const res = await insertPhoto(p.src, p.title, p.date, linkid,)
                 toast({
                     title: "Saved photo:",
                     description: "id-" + p.id,
@@ -79,7 +79,7 @@ const PhotoComponent = ({ bridgeid, photos, setPhotos }: { bridgeid?: number, ph
                     // console.log("saved", p.id,photos)
 
                     setPhotos([...photos]);
-                    
+
                     toast({
                         title: "Updated photo:",
                         description: "id-" + p.id,

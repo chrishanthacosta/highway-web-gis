@@ -25,7 +25,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }, [params.id]);
 
     return <div>
-        <p>id based</p>
+         
         <BridgeFormv2 id1={params.id.toString()} data1={bridge} />
 
     </div>;

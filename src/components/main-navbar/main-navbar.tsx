@@ -16,7 +16,7 @@ export default function MainNavbar() {
     {
       title: "Items", path: "/your-path", type: "dropdown",
       menuData: { title: "Select Item", menuItems: [{title: "Bridges", href:"/bridges"},
-       {title: "Culverts", href:"/culverts/add"}] }
+       {title: "Culverts", href:"/culverts"}] }
     },
     { title: "DB", path: "/dev/table" },
     { title: "Schema Gen", path: "/dev/schema" },

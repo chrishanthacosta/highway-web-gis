@@ -16,20 +16,20 @@ import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
 import { Button } from "@/components/ui/button"
 import { GenerateZodFormSchema } from '@/lib/system/generate-zod-form-schema';
-import { BridgeFormUiSchema, BridgeSchema } from '@/components/features/items/bridges/bridge-schema';
+import { CulvertFormUiSchema, CulvertSchema } from '@/components/features/items/culverts/culvert-schema';
 import { GenerateDefaults } from '@/lib/system/generate-zod-defaults';
 import { GenerateShadcnFormInputField } from '@/lib/system/generate-shadcn-form-input-field';
 import { GenerateShadcnArrayFormField } from '@/lib/system/generate-shadcn-array-form-field';
 import { GenerateShadcnArrayTableHeader } from '../../../../lib/system/generate-shadcn-array-header';
 import CameraComponent from '../../../../lib/camera/camera-component';
-import { insertBridge, updateBridge } from '@/components/features/items/bridges/actions-bridge';
+import { insertCulvert, updateCulvert } from '@/components/features/items/culverts/actions-culvert';
 import { AddSampleData } from '../../../../lib/system/add-sample-data';
 import { DivComponent } from '../../../../lib/system/code-gen-helpers/get-div-component';
 import { GenerateUiFromSchema } from '@/lib/system/generate-ui-from-schema';
 import { GetInsertSqliteStatement } from '@/lib/system/sqlite-helpers/get-insert-sqlite-stmt';
 import { cn } from '@/lib/utils';
 import { GetUpdateQuery } from '@/lib/system/sqlite-helpers/get-update-sqlite-stmt';
-import PhotoComponent, { Photo } from './../../../../lib/photos/photo-component';
+import PhotoComponent, { Photo } from '../../../../lib/photos/photo-component';
 
 import GeoPositionPicker from '@/lib/geo-location/geo-position.jsx';
 import Popup from '@/lib/popups/popup-type1';
@@ -37,32 +37,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation'
 import { GetPhoto, GetPhotoDetails } from '../photos/actions-photos';
 
-const formDef = GenerateZodFormSchema(BridgeSchema);
-export const BridgeFormSchema = z.object(formDef)
+const formDef = GenerateZodFormSchema(CulvertSchema);
+export const CulvertFormSchema = z.object(formDef)
 
 
-const defaultValues: any = GenerateDefaults(BridgeSchema);
-
-export const LoadingSpinner = ({ className }: { className?: string }) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={cn("animate-spin", className)}
-    >
-      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-    </svg>)
-}
+const defaultValues: any = GenerateDefaults(CulvertSchema);
 
 
-export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
+
+
+export const CulvertFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
   const router = useRouter()
   const [showPhotos, setshowPhotos] = useState<boolean>(false)
   const [photos, setPhotos] = useState<any>([])
@@ -71,12 +55,13 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
   // const [locationCoords, setlocationCoords] = useState<{}>({})
   const { toast } = useToast()
   const form = useForm({
-    resolver: zodResolver(BridgeFormSchema),
+    resolver: zodResolver(CulvertFormSchema),
     defaultValues: {
-      ...defaultValues, bridgespans: [{
+      ...defaultValues, culvertspans: [{
         spanno: "1",
         supportcenterspan: 0,
         clearspan: 0,
+        clearHeight: 0
       }]
     },
 
@@ -84,11 +69,11 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
 
   const { watch, setValue, getValues, formState: { isDirty, dirtyFields, isLoading }, } = form;
   let spanCount: number;
-  spanCount = watch("spanCount");
+  spanCount = watch("openingCount");
   let lat = watch("latitude")
   let lon = watch("longitude")
   useEffect(() => {
-    console.log("ppo11", id1, data1)
+
     if (data1) {
       form.reset(data1)
     }
@@ -103,36 +88,36 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
 
 
 
-  const { fields, append, remove } = useFieldArray({ name: BridgeSchema.linkedSchemas[0].tableName, control: form.control })
+  const { fields, append, remove } = useFieldArray({ name: CulvertSchema.linkedSchemas[0].tableName, control: form.control })
 
-  async function onSubmit(data: z.infer<typeof BridgeFormSchema>) {
+  async function onSubmit(data: z.infer<typeof CulvertFormSchema>) {
     console.log("  query -    obj-rty",)
     const dirtyValues = Object.fromEntries(
       Object.entries(data).filter(([key]) => dirtyFields[key])
     );
 
-    const uq = GetUpdateQuery(BridgeSchema, id1, dirtyValues)
+    const uq = GetUpdateQuery(CulvertSchema, id1, dirtyValues)
     console.log("uq-rty", uq, id1, dirtyValues)
     if (id1) { //update query - new obj
       console.log("update query -  old obj-rty",)
 
       //span table insert
 
-      if (dirtyFields.hasOwnProperty("bridgespans")) {
-        const insertSQls = GetInsertSqliteStatement(BridgeSchema, data)
+      if (dirtyFields.hasOwnProperty("culvertspans")) {
+        const insertSQls = GetInsertSqliteStatement(CulvertSchema, data)
         if (uq) {
           console.log("update query -  old obj-rty1",)
-          updateBridge(id1, uq, data.bridgespans, insertSQls)
+          updateCulvert(id1, uq, data.culvertspans, insertSQls)
         }
         else {
           console.log("update query -  old obj-rty2",)
-          updateBridge(id1, undefined, data.bridgespans, insertSQls)
+          updateCulvert(id1, undefined, data.culvertspans, insertSQls)
         }
       } else {
         console.log("update query -  old obj-rty3.0",)
         if (uq) {
           console.log("update query -  old obj-rty3.1",)
-          updateBridge(id1, uq, undefined, undefined)
+          updateCulvert(id1, uq, undefined, undefined)
         }
       }
       toast({
@@ -142,40 +127,16 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
 
     } else { //insert query - new obj
       console.log("insert query - new obj-rty",)
-      const insertSQls = GetInsertSqliteStatement(BridgeSchema, data)
-      const objId = await insertBridge(insertSQls);
+      const insertSQls = GetInsertSqliteStatement(CulvertSchema, data)
+      const objId = await insertCulvert(insertSQls);
       id1 = objId.lastInsertRowid;
       toast({
         title: "Saving done:",
         description: "id-" + id1,
       })
-      router.push("/bridges/list/" + id1)
+      router.push("/culverts/list/" + id1)
     }
 
-
-    // toast({
-    //   title: "Saving:",
-    //   description: "Added",
-    // })
-
-
-    return
-
-
-
-
-
-    //
-    //await saveBridge(q,data)
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}
-          </code>
-        </pre>
-      ),
-    })
 
 
   }
@@ -184,10 +145,10 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
     if (spanCount) {
       const emptySpans: any = []
       for (let index = 0; index < spanCount; index++) {
-        const element = { spanno: index + 1, supportcenterspan: 0, clearspan: 0 }
+        const element = { spanno: index + 1, supportcenterspan: 0, clearspan: 0, clearHeight: 0 }
         emptySpans.push(element)
       }
-      setValue("bridgespans", emptySpans);
+      setValue("culvertspans", emptySpans);
 
 
     }
@@ -248,12 +209,9 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
     }
 
     const photoDetails = await GetPhotoDetails(id1)
-    console.log("qwerty", photoDetails)
+
     for (const pd of photoDetails.data) {
       const p = await GetPhoto(pd.id)
-      console.log("qwerty", p)
-      // setPhotos([...photos, p.data])
-
       setPhoto(p.data)
     }
 
@@ -282,10 +240,10 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
 
       <div className="flex gap-2 w-full justify-end">
         <Button variant="default" onClick={form.handleSubmit(onSubmit)} disabled={!isDirty}>save Data</Button>
-        <Button ><Link href="/bridges/add">Add New Bridge</Link></Button>
+        <Button ><Link href="/culverts/add">Add New Culvert</Link></Button>
         <Button type="button" onClick={() => {
-          //setValue("bridgespans.0.clearspan",3)
-          AddSampleData(BridgeSchema, setValue)
+          //setValue("culvertspans.0.clearspan",3)
+          AddSampleData(CulvertSchema, setValue)
         }}>Add Sample Data</Button>
 
       </div>
@@ -297,55 +255,8 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
 
           </FormDescription>
           <div className="flex flex-col justify-center flex-wrap gap-2 w-full">
-            {GenerateUiFromSchema(BridgeFormUiSchema, BridgeSchema, form.control, fields, { setlocation: GeolocationButton })}
-            {/* <div className="flex justify-center flex-wrap gap-2 w-full">
-              <div className="flex flex-col gap-2 w-full md:w-1/3 min-w-80"> 
-                
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.location,   control: form.control})}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.roadName,   control: form.control})}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.bridgeWidth,   control: form.control})}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.bridgeOverallWidth,   control: form.control})}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.footWalkLhsWidth,   control: form.control})}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.footWalkRhsWidth,   control: form.control})}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.riverWidth,   control: form.control})}
-                
-                </div>
-              <div className=" flex flex-col gap-2 w-full md:w-1/3 min-w-80">
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.eeDivision, control: form.control })}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.constructedYear, control: form.control })}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.carriagewayWidth, control: form.control })}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.crossingDetails, control: form.control })}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.riverDepth, control: form.control })}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.paintingAreaSteel, control: form.control })}
-                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.paintingAreaConcrete, control: form.control })}
-                
-              </div>
-            </div>
-            <div className="flex flex-col items-center justify-center flex-wrap gap-2 w-full">
-              <h1>Spans</h1>
-              {GenerateShadcnFormInputField({ field: BridgeSchema.fields.spanCount, control: form.control,inputClassName:"max-w-80" })}
-           
-                <div className="hidden md:flex items-end flex-wrap ">
-                {GenerateShadcnArrayTableHeader(BridgeSchema.linkedSchemas[0])}
-                </div>
-                {fields.map((field, index) => { return(
-                  <div key={field.id} className="flex items-end flex-wrap">
-                 
-                    <div className="w-20">
-                      {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.spanno, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
-                      </div>
-                    <div className="min-w-60">
-                    {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.supportcenterspan, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
-                    </div>
-                    <div className="min-w-60">
-                      {GenerateShadcnArrayFormField({ field: BridgeSchema.linkedSchemas[0].fields.clearspan, control: form.control, name: BridgeSchema.linkedSchemas[0].tableName, index })}
-                    </div>
-                  
-                  </div>
-                )})
-                }
-             
-              </div>  */}
+            {GenerateUiFromSchema(CulvertFormUiSchema, CulvertSchema, form.control, fields, { setlocation: GeolocationButton })}
+            
 
           </div>
 
@@ -355,8 +266,8 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
           </div>
 
           {/* <Button type="button" onClick={() => {
-            //setValue("bridgespans.0.clearspan",3)
-            AddSampleData(BridgeSchema, setValue)
+            //setValue("culvertspans.0.clearspan",3)
+            AddSampleData(CulvertSchema, setValue)
           }}>Add Sample Data</Button> */}
         </form>
       </Form>
@@ -373,7 +284,7 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
       </div>
       {/* {showGeoLocation && <PhotoComponent></PhotoComponent>} */}
 
-      {!isLoading || <LoadingSpinner />}
+
     </div>
   )
 }

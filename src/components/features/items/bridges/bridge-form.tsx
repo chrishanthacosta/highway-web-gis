@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { GenerateZodFormSchema } from '@/lib/system/generate-zod-form-schema';
 import { BridgeSchema } from '@/components/features/items/bridges/bridge-schema';
 import { GenerateDefaults } from '@/lib/system/generate-zod-defaults';
-import { GenerateShadcnFormField } from '@/lib/system/generate-shadcn-form-field';
+import { GenerateShadcnFormInputField } from '@/lib/system/generate-shadcn-form-input-field';
 import { GenerateShadcnArrayFormField } from '@/lib/system/generate-shadcn-array-form-field';
 import { GenerateShadcnArrayTableHeader } from '../../../../lib/system/generate-shadcn-array-header';
 import CameraComponent from '../../../../lib/camera/camera-component';
@@ -150,29 +150,29 @@ export const BridgeForm = () => {
             <div className="flex justify-center flex-wrap gap-2 w-full">
               <div className="flex flex-col gap-2 w-full md:w-1/3 min-w-80">
 
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.location, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.roadName, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.bridgeWidth, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.bridgeOverallWidth, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.footWalkLhsWidth, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.footWalkRhsWidth, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.riverWidth, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.location, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.roadName, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.bridgeWidth, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.bridgeOverallWidth, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.footWalkLhsWidth, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.footWalkRhsWidth, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.riverWidth, control: form.control })}
 
               </div>
               <div className=" flex flex-col gap-2 w-full md:w-1/3 min-w-80">
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.eeDivision, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.constructedYear, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.carriagewayWidth, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.crossingDetails, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.riverDepth, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.paintingAreaSteel, control: form.control })}
-                {GenerateShadcnFormField({ field: BridgeSchema.fields.paintingAreaConcrete, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.eeDivision, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.constructedYear, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.carriagewayWidth, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.crossingDetails, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.riverDepth, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.paintingAreaSteel, control: form.control })}
+                {GenerateShadcnFormInputField({ field: BridgeSchema.fields.paintingAreaConcrete, control: form.control })}
 
               </div>
             </div>
             <div className="flex flex-col items-center justify-center flex-wrap gap-2 w-full">
               <h1>Spans</h1>
-              {GenerateShadcnFormField({ field: BridgeSchema.fields.spanCount, control: form.control, inputClassName: "max-w-80" })}
+              {GenerateShadcnFormInputField({ field: BridgeSchema.fields.spanCount, control: form.control, inputClassName: "max-w-80" })}
               {/* <div className="min-w-60">
                 <Button type='button' onClick={() => append({})}>+</Button>
               </div> */}

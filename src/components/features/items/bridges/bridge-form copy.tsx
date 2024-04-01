@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { GenerateZodFormSchema } from '@/lib/system/generate-zod-form-schema';
 import { BridgeSchema } from '@/components/features/items/bridges/bridge-schema';
 import { GenerateDefaults } from '@/lib/system/generate-zod-defaults';
-import { GenerateShadcnFormField } from '@/lib/system/generate-shadcn-form-field';
+import { GenerateShadcnFormField } from '@/lib/system/generate-shadcn-form-input-field';
 import { GenerateShadcnArrayFormField } from '@/lib/system/generate-shadcn-array-form-field';
 import { GenerateShadcnArrayTableHeader } from '../../../../lib/system/generate-shadcn-array-header';
 import CameraComponent from '../../../../lib/camera/camera-component';

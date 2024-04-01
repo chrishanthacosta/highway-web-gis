@@ -5,7 +5,7 @@ import  Database  from 'better-sqlite3';
 
 import React from 'react'
 import { SiTruenas } from 'react-icons/si';
-// import { BridgeFormSchema } from '@/components/features/items/forms/bridge-form';
+// import { CulvertFormSchema } from '@/components/features/items/forms/bridge-form';
 import { z } from "zod";
 import { GetInsertSqliteStatement } from '@/lib/system/sqlite-helpers/get-insert-sqlite-stmt';
 
@@ -13,31 +13,9 @@ const maindbFileName = "app.db"
 const photodbFileName = "app-photos.db"
  
 
-export const createdb = async (): Promise<boolean> => {
-  const db = new Database(maindbFileName);
-  db.pragma('journal_mode = WAL');
-  const q = `
- CREATE TABLE users (
-     id INTEGER PRIMARY KEY,
-     name STRING NOT NULL,
-     username TEXT NOT NULL UNIQUE
- )
-  `
-  try {
-    db.exec(q)
-   
-     console.log("suc",)
-     db.close();
-     return  Promise.resolve( true);
-  } catch (e) {
-     db.close();
-    console.log("fail",)
-     return  Promise.resolve( false);
-  }
  
-}
 
-export const insertBridge = async (insertStatements: any, ) => {
+export const insertCulvert = async (insertStatements: any, ) => {
    
   const db = new Database(maindbFileName);
   db.pragma('journal_mode = WAL');
@@ -74,7 +52,7 @@ export const insertBridge = async (insertStatements: any, ) => {
   }
 }
 
-export const getBridge = async (id: Number,mainSql:string, spanSql:string ): Promise<any> => {
+export const getCulvert = async (id: Number,mainSql:string, spanSql:string ): Promise<any> => {
   
   const db = new Database(maindbFileName);
   db.pragma('journal_mode = WAL');
@@ -93,11 +71,11 @@ export const getBridge = async (id: Number,mainSql:string, spanSql:string ): Pro
   console.log("rows",rows,)
    
   db.close()
-     return Promise.resolve({success:true,msg:"",data: {...mainRow,bridgespans:rows} });
+     return Promise.resolve({success:true,msg:"",data: {...mainRow,culvertpans:rows} });
 }
 
 
-export const updateBridge = async (id: Number, updateStatementMain: any,bridgeSpans:any,insertStatements:any) => {
+export const updateCulvert = async (id: Number, updateStatementMain: any,bridgeSpans:any,insertStatements:any) => {
   const db = new Database(maindbFileName);
   db.pragma('journal_mode = WAL');
  
@@ -114,7 +92,7 @@ export const updateBridge = async (id: Number, updateStatementMain: any,bridgeSp
   if (bridgeSpans) {
     //spans table - delete all and insert
      //delete
-    const del = db.prepare('DELETE FROM bridgespans WHERE bridgeid = ?');
+    const del = db.prepare('DELETE FROM culvertspans WHERE culvertid = ?');
     del.run( id)
     //insert
     insertStatements.linkedInsertStatements.map((linkedInsertStatement: any) => {
@@ -136,7 +114,7 @@ export const updateBridge = async (id: Number, updateStatementMain: any,bridgeSp
 }
  
 
-export const GetBridges =async (mainSql:string) => {
+export const GetCulverts =async (mainSql:string) => {
   const db = new Database(maindbFileName);
   db.pragma('journal_mode = WAL');
   
