@@ -257,7 +257,7 @@ export default function GeoPositionPicker({ setc, lat, lon }) {
                         <DialogTitle>Add Geo-Location...</DialogTitle>
                         <DialogDescription > */}
             <Map ref={mapRef} style={{ width: "90vw", height: "500px" }}   >
-                <olView center={[longitude, latitude]} zoom={1} />
+                <olView initialCenter={[-472202, 7530279]} initialZoom={3} />
                 <olLayerTile>
                     <olSourceOSM />
                 </olLayerTile>

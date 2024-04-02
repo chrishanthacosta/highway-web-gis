@@ -137,14 +137,10 @@ export const selectedStyleFunction = (feature:any) => {
     return selectedStyle;
 };
 
-export type SelectedItem = {
-    type: string;
-    id: number;
-}
 
 export default function ItemsMap() {
-    const [latitude, setLatitude] = useState(0);
-    const [longitude, setLongitude] = useState(0);
+    const [latitude, setLatitude] = useState(80);
+    const [longitude, setLongitude] = useState(30);
     const [vectorSource, setVectorSource] = useState<VectorSource>();
     // const [locCoord, setlocCoord] = useState([]);
     const [gj, setgj] = useState<any>({});
@@ -161,47 +157,46 @@ export default function ItemsMap() {
     }, []);
 
 
-
     const items = useItemsStore((state) => state.items);
     const [selectMethod, setSelectMethod] = useState("singleClick");
     const [displayText, setDisplayText] = useState("0 selected features");
-    const [selectedItemType, setselectedItemType] = useState<SelectedItem>()
+    const [selectedItemType, setselectedItemType] = useState("")
     const [popupNode, setpopupNode] = useState(<div>empty</div>)
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     switch (selectedItemType?.type) {
-    //         case "bridge":
-    //                 setpopupNode(BridgePopup({ id: selectedItemType?.id }))
-    //             break;
-    //             case "culvert":
-    //                 setpopupNode(CulvertPopup({ id: selectedItemType?.id }))
+        switch (selectedItemType) {
+            case "bridge":
+                setpopupNode(BridgePopup)
+                break;
+                case "culvert":
+                setpopupNode(CulvertPopup)
                     
-    //             break;
+                break;
         
-    //         default:
-    //             break;
-    //     }
+            default:
+                break;
+        }
 
 
 
-    //  },[selectedItemType])
+     },[selectedItemType])
 
 
     const handleSelect = useCallback((e) => {
 
-        const fs = e.target.getFeatures()
-        console.log("fs",fs.item(0),)
-        if (fs.getLength() > 0) {
-            setDisplayText(
-                ` ${fs.item(0).get("type")} `
-            );
-            setselectedItemType({ type: fs.item(0).get("type"), id: fs.item(0).get("id") })
-        } else {
-            setDisplayText(
-                ` no f sel `
-            );
-        }
+        // const fs = e.target.getFeatures()
+        // console.log("fs",fs.item(0),)
+        // if (fs.getLength() > 0) {
+        //     // setDisplayText(
+        //     //     ` ${fs.item(0).get("type")} `
+        //     // );
+        //    // setselectedItemType(fs.item(0).get("type"))
+        // } else {
+        //     setDisplayText(
+        //         ` no f sel `
+        //     );
+        // }
 
         // setDisplayText(
         //     ` ${e.target
@@ -229,7 +224,7 @@ export default function ItemsMap() {
                 }
             );
         }
-     
+        //load items
 
 
 
@@ -237,7 +232,7 @@ export default function ItemsMap() {
     }, []);
 
     useEffect(() => {
-         
+        console.log("items", items,)
         const itemsList = items?.map(i => {
             return {
                 type: "Feature",
@@ -273,6 +268,10 @@ export default function ItemsMap() {
                 }, ...itemsList
             ],
         })
+
+
+
+
 
     }, [items])
 
@@ -365,8 +364,9 @@ export default function ItemsMap() {
         }
 
 
-        // }, [assetSourceRef?.current, gj?.features?.length,])
+      
     }, [vectorSource, gj])
+   
 
     const selectCondition = useMemo(() => {
         switch (selectMethod) {
@@ -383,24 +383,7 @@ export default function ItemsMap() {
         }
     }, [selectMethod]);
 
-    const GetPopupNode =useCallback( () => {
-        
-        switch (selectedItemType?.type) {
-            case "bridge":
-                return(<BridgePopup  id={selectedItemType?.id }/> )
-                break;
-            case "culvert":
-                return (<CulvertPopup id={selectedItemType?.id} />)
-                break;
-
-            default:
-                return (<div  >default</div>)
-                break;
-        }
-
-
-
-    }, [selectedItemType])
+   
 
     return (
         <div>
@@ -433,7 +416,9 @@ export default function ItemsMap() {
                     ✖
                 </button>
                 <div id="popup-content">
-                    {GetPopupNode()}
+                    <p>You clicked here:</p>
+                    <code>{coordinates && toStringHDMS(toLonLat(coordinates))}</code>
+                    {/* {popupNode} */}
                 </div>
             </div>
             {/* <Map ref={mapRef} style={{ width: "90vw", height: "90vh" }}   > */}
@@ -449,7 +434,7 @@ export default function ItemsMap() {
                     />
                 ) : null}
                
-                <olView initialCenter={[-472202, 7530279]} initialZoom={3} />
+                <olView center={[longitude, latitude]} zoom={1} initialCenter={[0, 0]}  />
                 <olLayerTile>
                     <olSourceOSM />
                 </olLayerTile>
@@ -468,11 +453,11 @@ export default function ItemsMap() {
 
                     </olSourceVector> */}
                 </olLayerVector>
-                <olInteractionSelect
+                {/* <olInteractionSelect
                     args={{ condition: selectCondition }}
                     style={selectedStyleFunction}
                     onSelect={handleSelect}
-                />
+                /> */}
 
             </Map>
             <span>{displayText}</span>
