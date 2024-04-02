@@ -5,6 +5,7 @@ import Image from "next/image";
 // import { BridgeForm } from '../components/features/items/forms/bridge-form';
 import { Button } from '@/components/ui/button';
 import { createdb } from "../components/features/items/bridges/actions-bridge";
+import ItemsMap from "@/components/features/items-map/item-map";
 
 export default function Home() {
 
@@ -16,8 +17,8 @@ export default function Home() {
     <>
 
       <div className="container mx-auto bg-gray-200 flex justify-center">
-        <h1>App</h1>
-        {/* <Button onClick={c}  >db create </Button> */}
+       
+        <ItemsMap></ItemsMap>
       </div>
     </>
   );

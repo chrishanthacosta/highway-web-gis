@@ -37,7 +37,7 @@ export const GenerateShadcnFormSelectField = ({ field, control, inputClassName="
                     <FormLabel>{ label } </FormLabel>
                   
                       {/* <Input placeholder={placeholder}  {...field} {...disabled} type={inputType} className={inputClassName} /> */}
-                      <Select onValueChange={field.onChange} defaultValue={field.value}  >
+                    <Select onValueChange={field.onChange} defaultValue={field.value} {...field}  >
                          <FormControl> 
                         <SelectTrigger className={inputClassName}>
                           <SelectValue placeholder={placeholder} />

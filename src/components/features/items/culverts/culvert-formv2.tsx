@@ -76,6 +76,7 @@ export const CulvertFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => 
 
     if (data1) {
       form.reset(data1)
+      // setValue("culvertType", "system");
     }
   }, [data1])
 
