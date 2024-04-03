@@ -25,6 +25,8 @@ import VectorSource from "ol/source/Vector";
 import { useItemsStore } from './item-store';
 import { BridgePopup } from './bridge-popup';
 import { CulvertPopup } from './culvert-popup';
+import { styleFunctionItems } from './item-styles';
+import { Underdog } from 'next/font/google';
 // import  {GeometryType}  from "ol/geom/GeometryType";
 // import  Geometry  from "ol/geom";
 // import { useItemsStore } from "./store";
@@ -154,13 +156,9 @@ export default function ItemsMap() {
     const mapRef = useRef(null);
     //const coords = useRef([]);
     const [coordinates, setCoordinates] = useState(undefined);
+    const [sclickCoord, setsclickCoord] = useState(undefined);
+
     const [popup, setPopup] = useState();
-    const onSingleclick = useCallback((evt) => {
-        const { coordinate } = evt;
-        setCoordinates(coordinate);
-    }, []);
-
-
 
     const items = useItemsStore((state) => state.items);
     const [selectMethod, setSelectMethod] = useState("singleClick");
@@ -168,50 +166,44 @@ export default function ItemsMap() {
     const [selectedItemType, setselectedItemType] = useState<SelectedItem>()
     const [popupNode, setpopupNode] = useState(<div>empty</div>)
 
-    // useEffect(() => {
+    const onSingleclick = useCallback((evt) => {
+        const { coordinate } = evt;
+         
+        setsclickCoord(coordinate);
+        //setCoordinates(coordinate);
+    }, []);
 
-    //     switch (selectedItemType?.type) {
-    //         case "bridge":
-    //                 setpopupNode(BridgePopup({ id: selectedItemType?.id }))
-    //             break;
-    //             case "culvert":
-    //                 setpopupNode(CulvertPopup({ id: selectedItemType?.id }))
-                    
-    //             break;
-        
-    //         default:
-    //             break;
-    //     }
-
-
-
-    //  },[selectedItemType])
-
+    useEffect(() => {
+        if (selectedItemType?.type) {
+            
+            setCoordinates(sclickCoord);
+        } else {
+            
+            //setsclickCoord(undefined);
+            //setCoordinates(undefined)
+        }
+    }, [sclickCoord, selectedItemType])
 
     const handleSelect = useCallback((e) => {
-
+        
         const fs = e.target.getFeatures()
-        console.log("fs",fs.item(0),)
+        
         if (fs.getLength() > 0) {
             setDisplayText(
                 ` ${fs.item(0).get("type")} `
             );
             setselectedItemType({ type: fs.item(0).get("type"), id: fs.item(0).get("id") })
         } else {
-            setDisplayText(
-                ` no f sel `
-            );
+            
+           
+            setselectedItemType({ type: "", id: 0 })
+             
         }
 
-        // setDisplayText(
-        //     ` ${e.target
-        //         .getFeatures()
-        //         .getLength()} selected features (last operation selected ${e.selected.length
-        //     } and deselected  ${e.deselected.length} features)`
-        // );
+       
     }, []);
 
-    console.log("rendering11-rendering",)
+   
     useEffect(() => {
 
         if ('geolocation' in navigator) {
@@ -247,6 +239,7 @@ export default function ItemsMap() {
                 properties: {
                     type: i.type,
                     id: i.id,
+                    location: i.location,
                 }
             }
         })
@@ -267,7 +260,7 @@ export default function ItemsMap() {
                         coordinates: fromLonLat([longitude, latitude]),
                     },
                     properties: {
-                        type: "current location",
+                        type: "current-location",
                         id: "0"
                     }
                 }, ...itemsList
@@ -276,83 +269,8 @@ export default function ItemsMap() {
 
     }, [items])
 
-
-
-    // const featureAddedHandler = useCallback(() => {
-    //     const fs = vectorSource.getFeatures()
-    //     const lastFCoord = fs.at(-1)?.getGeometry().flatCoordinates
-    //     const latlong = toLonLat(lastFCoord)
-    //     console.log("rendering11-lastFCoord", latlong,)
-    //     setc(latlong)
-    //     // setLat(latlong[1])
-    //     // setLon(latlong[0])
-
-    //     coords.current = [latlong[0], latlong[1]]
-
-    //     for (let index = 0; index < fs.length - 1; index++) {
-    //         const element = fs[index];
-    //         vectorSource.removeFeature(element)
-
-    //     }
-    //     // console.log("ee11",fs.at(-1).getGeometry())
-    // }, [vectorSource])
-
-
-
-    // useEffect(() => {
-
-    //     console.log("rendering11-vectorSource.", vectorSource)
-    //     if (vectorSource) {
-    //         console.log("rendering11- event added",)
-    //         vectorSource.on("addfeature", featureAddedHandler);
-    //     } else {
-    //         console.log("rendering11- event not added",)
-    //     }
-
-
-    //     // }, [assetSourceRef?.current, gj?.features?.length,])
-    // }, [vectorSource])
-
-
-
-    // const onSingleclick = useCallback((evt) => {
-    //     const { coordinate } = evt;
-    //     // console.log("sclick", coordinate)
-    //     const latlong = toLonLat(coordinate)
-    //     setLatitude(latlong[1]);
-    //     setLongitude(latlong[0]);
-    // }, []);
-
-    // useEffect(() => {
-
-    //     if (latitude != 0 && longitude != 0) {
-    //         console.log("rendering11-q11- setgj",)
-    //         setgj({
-    //             type: "FeatureCollection",
-    //             crs: {
-    //                 type: "name",
-    //                 properties: {
-    //                     name: "EPSG:3857",
-    //                 },
-    //             },
-    //             features: [
-    //                 {
-    //                     type: "Feature",
-    //                     geometry: {
-    //                         type: "Point",
-    //                         coordinates: fromLonLat([longitude, latitude]),
-    //                     },
-    //                 },
-    //             ],
-    //         })
-    //     } else {
-    //         console.log("rendering11-q11- not setgj",)
-    //     }
-
-    // }, [latitude, longitude]);
-
-    //onSingleclick = { onSingleclick }
-
+ 
+    
     useEffect(() => {
         // console.log("rendering11- inside add gj hook", gj.features?.length, assetSourceRef.current)
 
@@ -420,6 +338,8 @@ export default function ItemsMap() {
                     type="button"
                     onClick={(e) => {
                         setCoordinates(undefined);
+                        setsclickCoord(undefined);
+                        setselectedItemType({id:0,type:""})
                         e.target.blur();
                         return false;
                     }}
@@ -453,14 +373,15 @@ export default function ItemsMap() {
                 <olLayerTile>
                     <olSourceOSM />
                 </olLayerTile>
-                <olLayerVector ref={assetLayerRef}   >
+                <olLayerVector ref={assetLayerRef} style={styleFunctionItems}   >
                     <olSourceVector ref={setVectorSource} />
-                    <olStyleStyle attach="style" fill={fill} stroke={stroke}>
+                   
+                    {/* <olStyleStyle attach="style" fill={fill} stroke={stroke}>
                         <olStyleCircle
                             attach="image"
                             args={{ radius: 7, fill: circleFill }}
                         />
-                    </olStyleStyle>
+                    </olStyleStyle> */}
 
                     {/* <olFeature>
                             <olGeomCircle center={[1e6, 1e6]} radius={100} />

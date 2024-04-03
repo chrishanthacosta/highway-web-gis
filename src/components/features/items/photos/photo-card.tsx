@@ -34,7 +34,7 @@ export const PhotoBrowser = ({ linkid }: { linkid: number }) => {
 
 
         const photoDetailsF = await GetPhotoDetails(linkid)
-        console.log("qwerty1", linkid, photoDetailsF)
+        console.log("qwerty1-photoDetailsF", linkid, photoDetailsF.data)
         setphotoDetails(photoDetailsF.data)
 
 
@@ -84,7 +84,7 @@ export const PhotoBrowser = ({ linkid }: { linkid: number }) => {
                 setcurrentphotoid(photoDetails[curPIndex + 1].id)
             }
         }
-    }, [])
+    }, [currentphotoid])
 
     const setBackPhotoId = useCallback(() => {
         const curPIndex = photoDetails.findIndex((p: any) => p.id == currentphotoid)
@@ -93,21 +93,23 @@ export const PhotoBrowser = ({ linkid }: { linkid: number }) => {
                 setcurrentphotoid(photoDetails[curPIndex - 1].id)
             }
         }
-    }, [])
+    }, [currentphotoid])
 
 
 
     return (
-        <Card>
+        <Card  >
             <CardHeader>
                 <CardTitle>{currentphoto?.title}</CardTitle>
-                <CardDescription><Button onClick={setBackPhotoId}>Back</Button><Button onClick={setNextPhotoId}>Next</Button></CardDescription>
+                <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
-                {photoDetails.length > 0 ? <Image src={currentphoto?.src} width="200" height="200" alt="p" /> : <span>NO Photos</span>}
+                <div className="relative w-[300px] h-[300px]">  
+                    {photoDetails.length > 0 ? <Image src={currentphoto?.src} fill alt="p" className="object-contain" /> : <span>NO Photos</span>}
+                </div>  
             </CardContent>
             <CardFooter>
-                <p>Card Footer</p>
+                <Button onClick={setBackPhotoId} className="mr-4">Back</Button><Button onClick={setNextPhotoId}>Next</Button>
             </CardFooter>
         </Card>
     )

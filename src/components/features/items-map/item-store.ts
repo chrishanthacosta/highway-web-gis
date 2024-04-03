@@ -5,7 +5,8 @@ export type Item = {
     type: string;
     latitude: number;
     longitude: number;
-    id: number;
+  id: number;
+  location: string;
 }
 
 type ItemStore = {

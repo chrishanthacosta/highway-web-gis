@@ -18,8 +18,8 @@ export default function MainNavbar() {
       menuData: { title: "Select Item", menuItems: [{title: "Bridges", href:"/bridges"},
        {title: "Culverts", href:"/culverts"}] }
     },
-    { title: "DB", path: "/dev/table" },
-    { title: "Schema Gen", path: "/dev/schema" },
+    // { title: "DB", path: "/dev/table" },
+    // { title: "Schema Gen", path: "/dev/schema" },
     { title: "Reports", path: "/your-path" },
     { title: "Contact Us", path: "/your-path" },
   ]
@@ -34,7 +34,7 @@ export default function MainNavbar() {
       <div className=" items-start md:items-center justify-between px-4 max-w-screen-xl mx-auto flex md:px-8">
         <div id="logo" className="flex items-center justify-between py-3 md:py-5 md:block">
           <Link href="/">
-            <h1 className="text-3xl font-bold text-purple-600">Logo</h1>
+            <h1 className="text-3xl font-bold text-purple-600">RDA-Kurunegala</h1>
           </Link>
        
         </div>

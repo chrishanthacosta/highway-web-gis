@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getBridge } from "../items/bridges/actions-bridge"
 import { GetSelectQuery } from "@/lib/system/sqlite-helpers/get-select-sqlite-stmt";
 import { BridgeSchema } from "../items/bridges/bridge-schema";
@@ -23,6 +23,13 @@ const tab2 = ["footWalkLhsWidth", "footWalkRhsWidth", "crossingDetails", "riverW
 export const BridgePopup = ({ id }: { id: number }) => {
 
     const [bridge, setBridge] = useState<any>({})
+    const [selectedTab, setselectedTab] = useState<string>("general")
+    const tabRef= useRef(null)
+
+    // useEffect(() => {
+    //     console.log("qwerty-bpop-init",)
+    // }, [])
+    
 
     useEffect(() => {
         const fetchBridge = async () => {
@@ -33,19 +40,20 @@ export const BridgePopup = ({ id }: { id: number }) => {
         };
 
         fetchBridge();
+        //tabRef?.current?.defaultValue = "general";
     }, [id]);
 
     return (
         <div className="w-3/4">
 
-            <h1>Bridge Info</h1>
-            <Tabs defaultValue="general" className="w-[30vw]">
-                <TabsList>
+            <h1>Bridge Info-{bridge.location}</h1>
+            <Tabs defaultValue="general" className="w-[30vw]"  >
+                <TabsList className="bg-blue-400">
                     <TabsTrigger value="general">General</TabsTrigger>
                     <TabsTrigger value="details">Details</TabsTrigger>
                     <TabsTrigger value="photo">Photo</TabsTrigger>
                 </TabsList>
-                <TabsContent value="general">
+                <TabsContent value="general"  >
                     <Table  >
 
                         <TableHeader>

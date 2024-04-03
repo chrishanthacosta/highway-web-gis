@@ -29,8 +29,8 @@ export const GetItems =async ( ) :Promise<any> => {
  
 
   //main table
-  const bridgeRows = db.prepare("select id, 'bridge' as type, latitude,longitude from bridges  ").all() ;
-  const culvertRows = db.prepare("select id, 'culvert' as type, latitude,longitude from culverts  ").all() ;
+  const bridgeRows = db.prepare("select id,location, 'bridge' as type, latitude,longitude from bridges  ").all() ;
+  const culvertRows = db.prepare("select id,location, 'culvert' as type, latitude,longitude from culverts  ").all() ;
    
 
   //  //main table
