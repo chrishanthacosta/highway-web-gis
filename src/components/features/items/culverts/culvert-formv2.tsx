@@ -31,7 +31,7 @@ import { cn } from '@/lib/utils';
 import { GetUpdateQuery } from '@/lib/system/sqlite-helpers/get-update-sqlite-stmt';
 import PhotoComponent, { Photo } from '../../../../lib/photos/photo-component';
 
-import GeoPositionPicker from '@/lib/geo-location/geo-position.jsx';
+import GeoPositionPicker from '@/lib/geo-location/geo-position';
 import Popup from '@/lib/popups/popup-type1';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'
