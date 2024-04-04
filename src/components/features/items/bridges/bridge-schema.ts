@@ -41,16 +41,16 @@ export const BridgeSchema = {
 
  const panel0Coloumn1 = {
      rows: [{ name: "id", className: "w-full" },],
-     className:"w-full md:w-1/3   md:min-w-80 "
+     className:"w-full md:w-1/3     min-w-80"
 }
  const panel1Coloumn1 = {
      rows: [{ name: "roadName", className: "w-full" }, { name: "location", className: "w-full" }, { name: "bridgeWidth", className: "w-full" }, { name: "carriagewayWidth", className: "w-full " }, { name: "crossingDetails", className: "w-full " }, { name: "riverDepth", className: "w-full " }, { name:"paintingAreaConcrete",className:"w-full "},],
-     className:"w-full md:w-1/3   md:min-w-80 "
+     className:"w-full md:w-1/3   md:min-w-80 min-w-80"
 }
 
  const panel1Coloumn2 = {
      rows: [{ name: "constructedYear", className: "w-full" }, { name: "eeDivision", className: "w-full" }, { name: "bridgeOverallWidth", className: "w-full" }, { name: "footWalkLhsWidth", className: "w-full " }, { name: "footWalkRhsWidth", className: "w-full " }, { name: "riverWidth", className: "w-full " }, { name:"paintingAreaSteel",className:"w-full "},],
-     className:"w-full md:w-1/3   md:min-w-80"
+     className:"w-full md:w-1/3   md:min-w-80 min-w-80"
 }
 
  const panel2Coloumn1 = {
@@ -72,8 +72,8 @@ export const BridgeSchema = {
 
 export const BridgeFormUiSchema = {
     panels: [
-        {columns:[panel0Coloumn1],className:"flex gap-2 justify-center flex-wrap  w-full",columnContainerClassName:"flex justify-center w-full"},
-        {columns:[panel1Coloumn1,panel1Coloumn2],className:"flex gap-2 justify-center flex-wrap  w-full",columnContainerClassName:"flex justify-center w-full"},
+        {columns:[panel0Coloumn1],className:"flex gap-2 justify-center flex-wrap  w-full",columnContainerClassName:"flex justify-center w-full  flex-wrap"},
+        {columns:[panel1Coloumn1,panel1Coloumn2],className:"flex gap-2 justify-center flex-wrap  w-full",columnContainerClassName:"flex justify-center w-full flex-wrap"},
         {columns:[panel2Coloumn1,panel2Coloumn2,panel2Coloumn3 ],className:"flex gap-2 justify-center items-center flex-wrap  w-full",columnContainerClassName:"flex justify-center items-center w-full"},
         {columns:[panel3Coloumn1 ],className:"flex justify-center w-full",columnContainerClassName:"flex justify-center w-1/3"},
          

@@ -74,8 +74,8 @@ export const CulvertSchema = {
 
 export const CulvertFormUiSchema = {
     panels: [
-        {columns:[panel0Coloumn1],className:"flex gap-2 justify-center flex-wrap  w-full",columnContainerClassName:"flex justify-center w-full"},
-        {columns:[panel1Coloumn1,panel1Coloumn2],className:"flex gap-2 justify-center flex-wrap  w-full",columnContainerClassName:"flex justify-center w-full"},
+        {columns:[panel0Coloumn1],className:"flex gap-2 justify-center flex-wrap  w-full",columnContainerClassName:"flex justify-center w-full flex-wrap"},
+        {columns:[panel1Coloumn1,panel1Coloumn2],className:"flex gap-2 justify-center flex-wrap  w-full",columnContainerClassName:"flex justify-center w-full flex-wrap"},
         {columns:[panel2Coloumn1,panel2Coloumn2,panel2Coloumn3 ],className:"flex gap-2 justify-center items-center flex-wrap  w-full",columnContainerClassName:"flex justify-center items-center w-full"},
         {columns:[panel3Coloumn1 ],className:"flex justify-center w-full",columnContainerClassName:"flex justify-center w-1/3"},
          
