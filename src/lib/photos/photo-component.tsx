@@ -27,22 +27,22 @@ import { useToast } from '@/components/ui/use-toast';
 import { convertUnixToUtc } from '../system/date-time/convert-unix-utc';
 
 
-const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos: Photo[], setPhotos: (p: any)=>{}}) => {
+const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos: Photo[], setPhotos: (p: any) => {} }) => {
     // const [photos, setPhotos] = useState<Photo[]>([]);
-   // const [expandedPhotoId, setExpandedPhotoId] = useState<number | null>(null);
+    // const [expandedPhotoId, setExpandedPhotoId] = useState<number | null>(null);
     const [showCamera, setShowCamera] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { toast } = useToast()
-    
+
 
     const handleAddPhoto = (photoSrc: string) => {
         console.log("xx-handleAddPhoto",)
         const newPhoto: Photo = {
-            id: -1*((photos?.at(-1)?.id) ?? 0 + 1 ) ,
+            id: -1 * ((photos?.at(-1)?.id) ?? 0 + 1),
             src: photoSrc,
             title: '',
             date: Date.now().toString(),
-            unsaved:true
+            unsaved: true
         };
         setPhotos([...photos, newPhoto]);
         setShowCamera(false)
@@ -69,9 +69,9 @@ const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos
                 p.id = res.lastInsertRowid
                 p.unsaved = false
                 // console.log("saved", p.id,photos)
-           
+
                 setPhotos([...photos]);
-            }else{
+            } else {
                 const res = updatePhoto(p.id, p.title)
 
                 if ((await res).success) {
@@ -90,17 +90,17 @@ const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos
         }
     };
 
-    const handleCaptionChange =  (photoId: number, caption: string) => {
+    const handleCaptionChange = (photoId: number, caption: string) => {
         //console.log("xx-pchange evt", photos)
         const p = photos.find(p => p.id == photoId)
-       // console.log("xx-2pchange evt", photos)
+        // console.log("xx-2pchange evt", photos)
         if (p) {
-            
+
             p.title = caption
-            p.unsaved=true
+            p.unsaved = true
             setPhotos([...photos])
         }
-        
+
 
         // setPhotos();
     }
@@ -125,7 +125,7 @@ const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos
 
     return (
         <div>
-        
+
             <input
                 type="file"
                 accept="image/*"
@@ -133,7 +133,7 @@ const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos
                 ref={fileInputRef}
                 onChange={handleFileChange}
             />
-            <div className="photo-grid">
+            <div className="flex flex-col gap-2">
                 {photos.map(photo => (
                     <div key={photo.id} className="">
                         <div className="flex justify-center w-full">
@@ -141,7 +141,7 @@ const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos
                         </div>
                         <div className="flex justify-between my-2 gap-2">
                             <div className="flex items-center gap-2">
-                             
+
                                 <Label>Title:</Label>
                                 <Input
                                     type="text"
@@ -152,7 +152,7 @@ const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos
                                 />
                                 <Label>Date/Time:</Label>
                                 {/* <Label>{ photo.date}</Label> */}
-                                <Label>{convertUnixToUtc( Number(photo.date))}</Label>
+                                <Label>{convertUnixToUtc(Number(photo.date))}</Label>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Button onClick={() => handleDeletePhoto(photo.id)}>Delete</Button>
@@ -163,19 +163,19 @@ const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos
                 ))}
             </div>
             <div className="flex gap-2 mt-8">
-           <Dialog>
-                <DialogTrigger asChild >
-                    <Button variant="destructive"> Open Camera</Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Add Photo...</DialogTitle>
-                        <DialogDescription>
-                            <CameraComponent onPhotoCapture={handleAddPhoto} />
-                        </DialogDescription>
-                    </DialogHeader>
-                </DialogContent>
-            </Dialog>
+                <Dialog>
+                    <DialogTrigger asChild >
+                        <Button variant="destructive"> Open Camera</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Add Photo...</DialogTitle>
+                            <DialogDescription>
+                                <CameraComponent onPhotoCapture={handleAddPhoto} />
+                            </DialogDescription>
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
                 <Button onClick={handleAttachPhoto}>Attach Photo</Button>
             </div>
         </div>

@@ -373,7 +373,7 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
       </div>
       {/* {showGeoLocation && <PhotoComponent></PhotoComponent>} */}
 
-      {!isLoading || <LoadingSpinner />}
+      {/* {!isLoading || <LoadingSpinner />} */}
     </div>
   )
 }
