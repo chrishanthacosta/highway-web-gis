@@ -139,8 +139,8 @@ const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos
                         <div className="flex justify-center w-full">
                             <img src={photo.src} alt={photo.title} />
                         </div>
-                        <div className="flex justify-between my-2 gap-2">
-                            <div className="flex items-center gap-2">
+                        <div className="flex justify-between my-2 gap-2 flex-wrap">
+                            <div className="flex items-center gap-2 flex-wrap">
 
                                 <Label>Title:</Label>
                                 <Input
