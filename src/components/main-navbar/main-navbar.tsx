@@ -6,6 +6,7 @@ import Link from "next/link"
 import { FaBars } from "react-icons/fa";
 import { GetDrpdownMenu } from "@/lib/system/ui-helpers/get-dropdownMenu";
 import Dropdown from "@/lib/ui-components/dropdown-menu";
+import { Button } from "../ui/button";
 
 export default function MainNavbar() {
   const [state, setState] = useState(false)
@@ -18,6 +19,7 @@ export default function MainNavbar() {
       menuData: { title: "Select Item", menuItems: [{title: "Bridges", href:"/bridges"},
        {title: "Culverts", href:"/culverts"}] }
     },
+      { title: "DB", path: "/dev/table" },
     // { title: "DB", path: "/dev/table" },
     // { title: "Schema Gen", path: "/dev/schema" },
     { title: "Reports", path: "/your-path" },
@@ -30,8 +32,8 @@ export default function MainNavbar() {
   };
 
   return (
-    <nav className="bg-white w-full border-b md:border-0">
-      <div className=" items-start md:items-center justify-between px-4 max-w-screen-xl mx-auto flex md:px-8">
+    <nav className="flex flex-col bg-white w-full border-b md:border-0">
+      <div className=" flex items-start md:items-center justify-between px-4 max-w-screen-xl mx-auto  md:px-8">
         <div id="logo" className="flex items-center justify-between py-3 md:py-5 md:block">
           <Link href="/">
             <h1 className="text-3xl font-bold text-purple-600">RDA-Kurunegala</h1>
@@ -71,6 +73,12 @@ export default function MainNavbar() {
           </div>
           <button>Login</button>
         </div>
+      
+      </div>
+      <div id="mobile-menu" className="flex flex-col gap-2 md:hidden mb-2">
+        <div className="flex gap-2"><Button variant={"secondary"}>Bridge List</Button><Button>Add Bridge</Button>  </div>
+        <div className="flex gap-2"><Button variant={"secondary"}>Culvert List</Button><Button>Add Culvert</Button>  </div>
+        
       </div>
     </nav>
   )

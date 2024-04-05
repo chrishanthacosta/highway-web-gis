@@ -268,7 +268,7 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
   }, [photo])
 
   return (
-    <div className='flex flex-col items-center justify-center mx-auto w-full  '>
+    <div className='flex flex-col items-center justify-center mx-auto w-full px-2 md:px-0 '>
       {/* <div className='mr-auto w-full'>
         <div className='flex justify-center '>
           
@@ -286,7 +286,7 @@ export const BridgeFormv2 = ({ id1, data1 }: { id1?: number, data1?: any }) => {
         <Button type="button" onClick={() => {
           //setValue("bridgespans.0.clearspan",3)
           AddSampleData(BridgeSchema, setValue)
-        }}>Add Sample Data</Button>
+        }}>ASD</Button>
 
       </div>
 

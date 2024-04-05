@@ -6,6 +6,7 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -25,14 +26,16 @@ import { Label } from '@/components/ui/label';
 import { deletePhoto, insertPhoto, updatePhoto } from '@/components/features/items/photos/actions-photos';
 import { useToast } from '@/components/ui/use-toast';
 import { convertUnixToUtc } from '../system/date-time/convert-unix-utc';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 
 const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos: Photo[], setPhotos: (p: any) => {} }) => {
     // const [photos, setPhotos] = useState<Photo[]>([]);
     // const [expandedPhotoId, setExpandedPhotoId] = useState<number | null>(null);
-    const [showCamera, setShowCamera] = useState<boolean>(false);
+    const [showCamera, setShowCamera] = useState<boolean>(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { toast } = useToast()
+    const [open, setOpen] =  useState(false);
 
 
     const handleAddPhoto = (photoSrc: string) => {
@@ -47,6 +50,7 @@ const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos
         setPhotos([...photos, newPhoto]);
         setShowCamera(false)
         console.log("xx-newPhoto", newPhoto)
+        setOpen(false)
     };
 
     const handleDeletePhoto = async (photoId: number) => {
@@ -163,7 +167,7 @@ const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos
                 ))}
             </div>
             <div className="flex gap-2 mt-8">
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}  >
                     <DialogTrigger asChild >
                         <Button variant="destructive"> Open Camera</Button>
                     </DialogTrigger>
@@ -174,6 +178,13 @@ const PhotoComponent = ({ linkid, photos, setPhotos }: { linkid?: number, photos
                                 <CameraComponent onPhotoCapture={handleAddPhoto} />
                             </DialogDescription>
                         </DialogHeader>
+                        <DialogFooter className="sm:justify-start">
+                            {/* <DialogClose asChild>
+                                <Button type="button" variant="secondary">
+                                    Close
+                                </Button>
+                            </DialogClose> */}
+                        </DialogFooter>
                     </DialogContent>
                 </Dialog>
                 <Button onClick={handleAttachPhoto}>Attach Photo</Button>
