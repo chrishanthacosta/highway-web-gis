@@ -9,7 +9,7 @@ import Dropdown from "@/lib/ui-components/dropdown-menu";
 import { Button } from "../ui/button";
 
 export default function MainNavbar() {
-  const [state, setState] = useState(true)
+  const [state, setState] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(null);
 
 
@@ -86,7 +86,7 @@ export default function MainNavbar() {
 
       </div>
       {/* {state && <div id="mobile-menu" className="flex flex-col gap-2   mb-2"> */}
-      {state && <div id="mobile-menu" className="flex flex-col gap-2 md:hidden mb-2">
+      {state && <div id="mobile-menu" className="flex  gap-2 md:hidden mb-2">
         <Dropdown key="bridge" label="Bridge" menuData={menus[0]?.menuData} handleItemClick={handleItemClick} index={0} selectedIndex={0}></Dropdown>
         <Dropdown key="culvert" label="Culvert" menuData={menus[1]?.menuData} handleItemClick={handleItemClick} index={1} selectedIndex={1}></Dropdown>
 
