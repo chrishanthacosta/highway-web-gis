@@ -79,6 +79,7 @@ function CameraComponent({ onPhotoCapture }: CameraComponentProps) {
                         width={600}
                         height={400}
                         forceScreenshotSourceSize={true}
+                        imageSmoothing={true}
                     />
                     <Button type="button" onClick={captureFrame}>Capture Frame</Button>
                 </div>
