@@ -76,6 +76,8 @@ function CameraComponent({ onPhotoCapture }: CameraComponentProps) {
                         screenshotFormat="image/webp"
                         videoConstraints={{ facingMode: 'environment' }}
                         screenshotQuality={1}
+                        width={600}
+                        height={400}
                     />
                     <Button type="button" onClick={captureFrame}>Capture Frame</Button>
                 </div>

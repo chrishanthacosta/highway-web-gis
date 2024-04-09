@@ -45,7 +45,7 @@ export default function MainNavbar() {
       <div className=" flex items-start md:items-center justify-between px-4 max-w-screen-xl mx-auto  md:px-8">
         <div id="logo" className="flex items-center justify-between py-3 md:py-5 md:block">
           <Link href="/">
-            <h1 className="text-3xl font-bold text-purple-600">RDA-Kurunegala1</h1>
+            <h1 className="text-3xl font-bold text-purple-600">RDA-Kurunegala2</h1>
           </Link>
 
         </div>
