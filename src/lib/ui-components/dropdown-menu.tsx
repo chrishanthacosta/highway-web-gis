@@ -4,10 +4,10 @@ import Link from 'next/link';
 
 interface DropdownProps {
     label: string;
-    menuData: { title: string, menuItems: { title: string, href: string }[] };
+    menuData?: { title: string, menuItems: { title: string, href: string }[] };
     selectedIndex: number;
     index:number;
-    handleItemClick:(n:number)=>{}
+    handleItemClick:(n:number)=>void
 }
 
 
